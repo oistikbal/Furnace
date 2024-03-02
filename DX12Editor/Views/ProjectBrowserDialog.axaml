@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="using:DX12Editor.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" 
+		x:DataType="vm:ProjectBrowserDialogViewModel"
+		x:Class="DX12Editor.Views.ProjectBrowserDialog"
+        Title="Project Browser" Height="450" Width="800">
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		<vm:ProjectBrowserDialogViewModel/>
+	</Design.DataContext>
+
+	<StackPanel>
+		<StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
+			<Button Content="Open Project" Click="OnProjectToggleButtonClick" x:Name="openProjectButton"/>
+			<Button Content="Create Project" Click="OnProjectToggleButtonClick" Margin="10,0,0,0" x:Name="createProjectButton"/>
+		</StackPanel>
+		<Border x:Name="projectBorder" Width="800" BorderBrush="Black" BorderThickness="1" Padding="10" Margin="10">
+			<UserControl Content="{Binding BorderContent}" />		
+		</Border>
+	</StackPanel>
+</Window>

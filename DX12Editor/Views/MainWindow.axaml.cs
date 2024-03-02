@@ -7,6 +7,14 @@ namespace DX12Editor.Views
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += OnMainWindowLoaded;
+        }
+
+        private void OnMainWindowLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            Loaded -= OnMainWindowLoaded;
+            var projectBroweser = new ProjectBrowserDialog();
+            projectBroweser.Show();
         }
     }
 }
