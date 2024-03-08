@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using DX12Editor.ViewModels;
 
 namespace DX12Editor.Views
 {
@@ -13,8 +14,7 @@ namespace DX12Editor.Views
         private void OnMainWindowLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             Loaded -= OnMainWindowLoaded;
-            var projectBroweser = new ProjectBrowserDialog();
-            projectBroweser.Show();
+            ((MainWindowViewModel)DataContext).Show();
         }
     }
 }

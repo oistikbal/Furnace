@@ -8,8 +8,8 @@ namespace DX12Editor.ViewModels
     public class ProjectBrowserDialogViewModel : ViewModelBase
     {
         private UserControl? _borderContent;
-        private NewProject _newProject;
-        private OpenProject _openProject;
+        private readonly NewProject _newProject;
+        private readonly OpenProject _openProject;
 
         public ReactiveCommand<Unit, Unit> ProjectOpenButton { get; }
         public ReactiveCommand<Unit, Unit> ProjectCreateButton { get; }
