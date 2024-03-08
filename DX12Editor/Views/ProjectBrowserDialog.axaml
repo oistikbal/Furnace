@@ -15,10 +15,10 @@
 
 	<StackPanel>
 		<StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
-			<Button Content="Open Project" Click="OnProjectToggleButtonClick" x:Name="openProjectButton"/>
-			<Button Content="Create Project" Click="OnProjectToggleButtonClick" Margin="10,0,0,0" x:Name="createProjectButton"/>
+			<Button Content="Open Project" Command="{Binding ProjectOpenButton}" x:Name="openProjectButton"/>
+			<Button Content="Create Project" Command="{Binding ProjectCreateButton}" Margin="10,0,0,0" x:Name="createProjectButton"/>
 		</StackPanel>
-		<Border x:Name="projectBorder" Width="800" BorderBrush="Black" BorderThickness="1" Padding="10" Margin="10">
+		<Border x:Name="projectBorder" Width="750" BorderBrush="Black" BorderThickness="1" Padding="10" Margin="10">
 			<UserControl Content="{Binding BorderContent}" />		
 		</Border>
 	</StackPanel>
