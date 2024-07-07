@@ -21,7 +21,6 @@ namespace DX12Editor
         private void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<MainWindowViewModel>();
-            services.AddTransient<Test>();
         }
 
         public override void OnFrameworkInitializationCompleted()

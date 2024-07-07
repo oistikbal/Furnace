@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using DX12Editor.ViewModels;
 
 
 namespace DX12Editor.Views
@@ -9,6 +10,7 @@ namespace DX12Editor.Views
         public NewProject()
         {
             InitializeComponent();
+            DataContext = new NewProjectViewModel();
         }
     }
 

@@ -6,6 +6,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="DX12Editor.Views.NewProject"
 		x:DataType="vm:NewProjectViewModel">
+	<Design.DataContext>
+		<vm:NewProjectViewModel/>
+	</Design.DataContext>
 	<StackPanel>
 		<StackPanel.Styles>
 			<Style Selector="Button">
@@ -14,20 +17,31 @@
 			</Style>
 		</StackPanel.Styles>
 		<StackPanel Background="Gray" Orientation="Horizontal" HorizontalAlignment="Center">
-			<ListBox Width="195" Height="250">
-
+			<ListBox Width="195" Height="250" ItemsSource="{Binding ProjectTemplates}" x:Name="templateListBox" SelectedItem="{Binding SelectedProjectTemplate}" SelectedIndex="0">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+							<Image Source="{Binding Icon}" Width="50" Height="50" Margin="0,0,5,0"></Image>
+							<TextBlock Text="{Binding ProjectType}" VerticalAlignment="Center"></TextBlock>
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
 			</ListBox>
-			<Border Width="400" Height="250" Margin="5,0,0,0"></Border>
+			<Border Width="400" Height="250" Margin="5,0,0,0">
+				<Border.Background>
+					<ImageBrush Source="{Binding SelectedProjectTemplate.Screenshot}"></ImageBrush>
+				</Border.Background>
+			</Border>
 		</StackPanel>
 
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
 			<TextBlock Text="Name" Width="50"></TextBlock>
-			<TextBox Width="550"></TextBox>
+			<TextBox Width="550" Text="{Binding ProjectName}"></TextBox>
 		</StackPanel>
 
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
 			<TextBlock Text="Path" Width="50"></TextBlock>
-			<TextBox Width="550"></TextBox>
+			<TextBox Width="550" Text="{Binding ProjectPath}"></TextBox>
 			<Button Content="Browse" Width="96" Margin="5,0,0,0"></Button>
 		</StackPanel>
 
