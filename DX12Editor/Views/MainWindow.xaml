@@ -1,0 +1,132 @@
+﻿<CustomChromeWindow x:Class="DX12Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:DX12Editor.ViewModels" 
+        IsShowIcon="False"
+        IsShowTitle="False"
+        ResizeMode="CanResizeWithGrip"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
+        WindowStartupLocation="CenterScreen"
+        Title="DX12Editor" Height="450" Width="800">
+
+    <CustomChromeWindow.LeftWindowCommands>
+        <Grid Margin="4,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Viewbox
+                Width="16"
+                Height="16"
+                Margin="4,2,8,0"
+                VerticalAlignment="Top"
+                IsHitTestVisible="False">
+            </Viewbox>
+            <Menu Grid.Column="1" Margin="0,2,0,0">
+                <MenuItem Header="View(_V)">
+                    <MenuItem
+                        Header="dsadasda"
+                        IsCheckable="True"
+                        IsChecked="{Binding StyleSelector.IsVisible, Mode=TwoWay}" />
+                    <MenuItem
+                        Header="dsadasda"
+                        IsCheckable="True"
+                        IsChecked="{Binding StyleSelector.IsVisible, Mode=TwoWay}" />
+                    <Menu Grid.Column="1" Margin="0,2,0,0">
+                        <MenuItem Header="View(_V)">
+                            <MenuItem
+                        Header="dsadasda"
+                        IsCheckable="True"
+                        IsChecked="{Binding StyleSelector.IsVisible, Mode=TwoWay}" />
+                            <MenuItem
+                        Header="dsadasda"
+                        IsCheckable="True"
+                        IsChecked="{Binding StyleSelector.IsVisible, Mode=TwoWay}" />
+                        </MenuItem>
+                    </Menu>
+                </MenuItem>
+            </Menu>
+            <Border
+                Grid.Column="2"
+                Margin="5,2,0,0"
+                VerticalAlignment="Top"
+                IsHitTestVisible="False">
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource SystemColorsWindowPanel}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock
+                    Margin="6,4,6,4"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontWeight="Bold"
+                    Text="{Binding Title, RelativeSource={RelativeSource AncestorType={x:Type CustomChromeWindow}}}"
+                    TextTrimming="CharacterEllipsis">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Value="False">
+                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource EnvironmentMainWindowInactiveCaptionText}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Border>
+        </Grid>
+    </CustomChromeWindow.LeftWindowCommands>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DockingManager x:Name="dockManager">
+            
+            <!-- LayoutRoot is the root of the docking layout -->
+            <LayoutRoot>
+                <!-- Define a LayoutPanel -->
+                <LayoutPanel Orientation="Horizontal">
+                    <!-- Define a LayoutAnchorablePane (for docking windows) -->
+                    <LayoutAnchorablePane DockWidth="200">
+                        <!-- Anchorable (dockable) content -->
+                        <LayoutAnchorable Title="Toolbox">
+
+                        </LayoutAnchorable>
+                        
+                    </LayoutAnchorablePane>
+
+                    <!-- Define a LayoutDocumentPane (for main content) -->
+                    <LayoutDocumentPane>
+                        <LayoutDocument Title="Document 1">
+                            <TextBox Text="{Binding Message}" FontSize="14"/>
+                        </LayoutDocument>
+                    </LayoutDocumentPane>
+                </LayoutPanel>
+            </LayoutRoot>
+        </DockingManager>
+        
+        <StatusBar
+            x:Name="mainStatusBar"
+            Grid.Row="1"
+            Background="Indigo"
+            Foreground="{DynamicResource SystemColorsWindowText}">
+            <StatusBarItem Margin="2,0,0,0" Content="Ready" />
+            <StatusBarItem
+                Margin="0,0,20,0"
+                HorizontalAlignment="Right"
+                ContentStringFormat="Selected: {0}" />
+        </StatusBar>
+    </Grid>
+
+
+</CustomChromeWindow>
