@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DX12Editor.Views;
 
 namespace DX12Editor
 {
     class Program
     {
         [System.STAThreadAttribute()]
-        public static void Main()
+        public static void Main(string[] args)
         {
             App app = new App();
             app.InitializeComponent();
