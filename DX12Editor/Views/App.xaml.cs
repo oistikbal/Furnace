@@ -1,6 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using DX12Editor.ViewModels;
+using DX12Editor.ViewModels.Windows;
 using DX12Editor.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,7 @@ namespace DX12Editor.Views
 
             _serviceProvider = services.BuildServiceProvider();
 
+            _serviceProvider.GetRequiredService<ConsoleWindowViewModel>();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
             mainWindow.Closed += (object? sender, EventArgs e) => { System.Environment.Exit(0); };
@@ -58,5 +61,6 @@ namespace DX12Editor.Views
                 }
             }
         }
+
     }
 }

@@ -8,14 +8,19 @@
         x:Name="Entities"
         Height="Auto" Width="Auto">
 
-    <ListBox x:Name="EntityListBox" 
-         Grid.Column="0" 
-         Margin="5"
-         ItemsSource="{Binding Entities}">
-        <ListBox.ItemTemplate>
-            <DataTemplate>
-                <TextBlock Text="{Binding Name}" />
-            </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+    <TreeView x:Name="EntityTreeView" 
+          Grid.Column="0" 
+          Margin="5"
+          ItemsSource="{Binding Scenes}">
+        <TreeView.ItemTemplate>
+            <HierarchicalDataTemplate ItemsSource="{Binding Entities}">
+                <TextBlock Text="{Binding SceneName}" FontWeight="Bold" />
+                <HierarchicalDataTemplate.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" Margin="10,0,0,0" />
+                    </DataTemplate>
+                </HierarchicalDataTemplate.ItemTemplate>
+            </HierarchicalDataTemplate>
+        </TreeView.ItemTemplate>
+    </TreeView>
 </UserControl>

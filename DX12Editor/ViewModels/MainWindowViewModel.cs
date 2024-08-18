@@ -20,6 +20,9 @@ namespace DX12Editor.ViewModels
         private WindowManager _windowManager;
         private IServiceProvider _serviceProvider;
 
+        public string SceneName { get => "SampleScene"; }
+        public string ProjectName { get => "NewProject"; }
+
         public void SetDockingManager(DockingManager dockingManager)
         {
             _windowManager = new WindowManager(_serviceProvider, dockingManager);

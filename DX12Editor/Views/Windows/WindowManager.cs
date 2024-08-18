@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Controls;
 using AvalonDock;
 using AvalonDock.Layout;
@@ -69,6 +70,7 @@ namespace DX12Editor.Views.Windows
 
             // Handle the closing event
             anchorable.Closed += (s, e) => _openWindows.Remove(viewModel);
+            Debug.WriteLine(true);
         }
     }
 }

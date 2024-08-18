@@ -22,6 +22,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Viewbox Grid.Column="0"
                 Width="16"
@@ -57,7 +58,7 @@
                                 <Setter.Value>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Name}" 
-                                       HorizontalAlignment="Center" 
+                                       HorizontalAlignment="Left" 
                                        VerticalAlignment="Center" />
                                     </DataTemplate>
                                 </Setter.Value>
@@ -88,7 +89,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontWeight="Bold"
-                    Text="{Binding Title, RelativeSource={RelativeSource AncestorType={x:Type CustomChromeWindow}}}"
+                    Text="{Binding SceneName}"
                     TextTrimming="CharacterEllipsis">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
@@ -101,6 +102,40 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Border>
+            <Border
+                Grid.Column="6"
+                Margin="5,2,0,0"
+                VerticalAlignment="Top"
+                IsHitTestVisible="False">
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource SystemColorsWindowPanel}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock
+                    Margin="6,4,6,4"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontWeight="Bold"
+                    Text="{Binding ProjectName}"
+                    TextTrimming="CharacterEllipsis">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Value="False">
+                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource EnvironmentMainWindowInactiveCaptionText}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Border>
+
         </Grid>
     </CustomChromeWindow.LeftWindowCommands>
 
