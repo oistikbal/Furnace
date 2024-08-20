@@ -1,6 +1,9 @@
-﻿using System.Reactive;
+﻿using System.IO;
+using System.Reactive;
 using System.Reflection;
 using AvalonDock;
+using DX12Editor.Models;
+using DX12Editor.Services;
 using DX12Editor.Views.Windows;
 using ReactiveUI;
 
@@ -17,7 +20,7 @@ namespace DX12Editor.ViewModels
         public List<WindowItem> WindowItems { get; private set; }
         public ReactiveCommand<WindowItem, Unit> OpenWindowCommand { get; private set; }
 
-        private WindowManager _windowManager;
+        private WindowsService _windowManager;
         private IServiceProvider _serviceProvider;
 
         public string SceneName { get => "SampleScene"; }
@@ -25,7 +28,7 @@ namespace DX12Editor.ViewModels
 
         public void SetDockingManager(DockingManager dockingManager)
         {
-            _windowManager = new WindowManager(_serviceProvider, dockingManager);
+            _windowManager = new WindowsService(_serviceProvider, dockingManager);
         }
 
         public MainWindowViewModel(IServiceProvider serviceProvider)

@@ -16,6 +16,7 @@ namespace DX12Editor.Views
         {
             base.OnStartup(e);
 
+            Debug.WriteLine(e.Args.Length);
             var services = new ServiceCollection();
             ConfigureServices(services);
 

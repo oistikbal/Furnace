@@ -1,4 +1,5 @@
-﻿using DX12Editor.Views;
+﻿using System.Diagnostics;
+using DX12Editor.Views;
 
 namespace DX12Editor
 {

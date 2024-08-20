@@ -1,20 +1,20 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Windows.Controls;
 using AvalonDock;
 using AvalonDock.Layout;
 using DX12Editor.ViewModels;
+using DX12Editor.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DX12Editor.Views.Windows
+namespace DX12Editor.Services
 {
-    public class WindowManager
+    public class WindowsService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly DockingManager _dockingManager;
         private readonly Dictionary<ViewModelBase, LayoutAnchorable> _openWindows = new();
 
-        public WindowManager(IServiceProvider serviceProvider, DockingManager dockingManager)
+        public WindowsService(IServiceProvider serviceProvider, DockingManager dockingManager)
         {
             _serviceProvider = serviceProvider;
             _dockingManager = dockingManager;
@@ -70,7 +70,6 @@ namespace DX12Editor.Views.Windows
 
             // Handle the closing event
             anchorable.Closed += (s, e) => _openWindows.Remove(viewModel);
-            Debug.WriteLine(true);
         }
     }
 }
