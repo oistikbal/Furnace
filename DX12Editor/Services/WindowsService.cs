@@ -17,11 +17,15 @@ namespace DX12Editor.Services
         private readonly IServiceProvider _serviceProvider;
         private readonly DockingManager _dockingManager;
         private readonly Dictionary<Type, LayoutContent> _openWindows = new();
+        private readonly Dictionary<string, string> _layoutDictionary = new();
+
+
 
         public WindowsService(IServiceProvider serviceProvider, DockingManager dockingManager)
         {
             _serviceProvider = serviceProvider;
             _dockingManager = dockingManager;
+            LoadLayoutsFromResources();
         }
 
         public void ShowFloatingWindow(Type windowType)
@@ -173,14 +177,6 @@ namespace DX12Editor.Services
             sl.Serialize(fs);
         }
 
-        public void Load()
-        {
-            var sl = new XmlLayoutSerializer(_dockingManager);
-            sl.LayoutSerializationCallback += LayoutSerializationCallback;
-            sl.Deserialize(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Default.xml"));
-            UpdateOpenWindows(_dockingManager.Layout);
-        }
-
         private void LayoutSerializationCallback(object sender, LayoutSerializationCallbackEventArgs e)
         {
             var contentId = e.Model.ContentId;
@@ -231,5 +227,53 @@ namespace DX12Editor.Services
 
             e.Content = userControl;
         }
+
+        public void LoadLayout(string layoutName)
+        {
+            if (_layoutDictionary.TryGetValue(layoutName, out var resourceName))
+            {
+                var xmlReader = XmlReader.Create(new StringReader(_layoutDictionary[layoutName]));
+                var serializer = new XmlLayoutSerializer(_dockingManager);
+                serializer.LayoutSerializationCallback += LayoutSerializationCallback;
+                serializer.Deserialize(xmlReader);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Layout with name {layoutName} not found.");
+            }
+        }
+
+        private string GetXmlContent(string resourceName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    throw new FileNotFoundException($"Resource {resourceName} not found.");
+                }
+
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        private void LoadLayoutsFromResources()
+        {
+            _layoutDictionary.Clear();
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceNames = assembly.GetManifestResourceNames();
+
+            foreach (var resourceName in resourceNames)
+            {
+                if (resourceName.EndsWith(".xml") && resourceName.Contains("Layouts"))
+                {
+                    _layoutDictionary[resourceName] = GetXmlContent(resourceName);
+                }
+            }
+        }
+
     }
 }

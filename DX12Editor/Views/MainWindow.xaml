@@ -147,12 +147,25 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Menu Grid.Column="0" Margin="0,2,0,0">
-                <MenuItem Header="Layout">
-                    <MenuItem Header="Default" />
+                <MenuItem Header="Layout" ItemsSource="{Binding Layouts}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding FileName}" 
+                                               HorizontalAlignment="Left" 
+                                               VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Command" Value="{Binding DataContext.SelectLayoutCommand, RelativeSource={RelativeSource AncestorType=Window}}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </Menu>
             <Button Grid.Column="1" Margin="0,2,0,0"  Content="Save" Command="{Binding SaveLayout}"/>
-            <Button Grid.Column="2" Margin="0,2,0,0" Content="Load" Command="{Binding LoadLayout}"/>
         </Grid>
     </CustomChromeWindow.RightWindowCommands>
 

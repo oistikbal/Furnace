@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayoutRoot>
+	<RootPanel Orientation="Vertical">
+		<LayoutPanel Orientation="Horizontal">
+			<LayoutAnchorablePaneGroup Orientation="Horizontal" DockWidth="384" FloatingWidth="400" FloatingHeight="300" FloatingLeft="680" FloatingTop="391">
+				<LayoutAnchorablePane FloatingWidth="400" FloatingHeight="300" FloatingLeft="680" FloatingTop="391">
+					<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Entities" IsSelected="True" ContentId="DX12Editor.Views.Windows.EntitiesWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="680" FloatingTop="391" FloatingWidth="400" FloatingHeight="300" LastActivationTimeStamp="08/21/2024 09:51:18" />
+				</LayoutAnchorablePane>
+			</LayoutAnchorablePaneGroup>
+			<LayoutDocumentPane>
+				<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Scene" IsSelected="True" ContentId="DX12Editor.Views.Windows.SceneWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="939" FloatingTop="398" FloatingWidth="400" FloatingHeight="300" LastActivationTimeStamp="08/21/2024 09:51:21" />
+			</LayoutDocumentPane>
+		</LayoutPanel>
+		<LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="268" FloatingWidth="400" FloatingHeight="300" FloatingLeft="709" FloatingTop="602">
+			<LayoutAnchorablePane DockHeight="268" FloatingWidth="400" FloatingHeight="300" FloatingLeft="709" FloatingTop="602">
+				<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Console" IsSelected="True" ContentId="DX12Editor.Views.Windows.ConsoleWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="709" FloatingTop="602" FloatingWidth="400" FloatingHeight="300" LastActivationTimeStamp="08/21/2024 09:51:15" />
+			</LayoutAnchorablePane>
+		</LayoutAnchorablePaneGroup>
+	</RootPanel>
+	<TopSide />
+	<RightSide />
+	<LeftSide />
+	<BottomSide />
+	<FloatingWindows />
+	<Hidden />
+</LayoutRoot>
