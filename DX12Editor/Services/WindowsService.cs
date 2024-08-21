@@ -77,6 +77,33 @@ namespace DX12Editor.Services
                 _openWindows.Remove(windowType);
             };
         }
+        public void LoadLayout(string layoutName)
+        {
+            if (_layoutDictionary.TryGetValue(layoutName, out var resourceName))
+            {
+                var xmlReader = XmlReader.Create(new StringReader(_layoutDictionary[layoutName]));
+                var serializer = new XmlLayoutSerializer(_dockingManager);
+                serializer.LayoutSerializationCallback += LayoutSerializationCallback;
+                serializer.Deserialize(xmlReader);
+                UpdateOpenWindows(_dockingManager.Layout);
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Layout with name {layoutName} not found.");
+            }
+        }
+
+        public void Save()
+        {
+            UpdateContentId(_dockingManager.Layout);
+            var sl = new XmlLayoutSerializer(_dockingManager);
+            using var fs = XmlWriter.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Default.xml"), new XmlWriterSettings()
+            {
+                Indent = true,
+                IndentChars = "\t"
+            });
+            sl.Serialize(fs);
+        }
 
         private void UpdateContentId(ILayoutContainer layoutContainer)
         {
@@ -165,18 +192,6 @@ namespace DX12Editor.Services
             }
         }
 
-        public void Save()
-        {
-            UpdateContentId(_dockingManager.Layout);
-            var sl = new XmlLayoutSerializer(_dockingManager);
-            using var fs = XmlWriter.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Default.xml"), new XmlWriterSettings()
-            {
-                Indent = true,
-                IndentChars = "\t"
-            });
-            sl.Serialize(fs);
-        }
-
         private void LayoutSerializationCallback(object sender, LayoutSerializationCallbackEventArgs e)
         {
             var contentId = e.Model.ContentId;
@@ -222,25 +237,11 @@ namespace DX12Editor.Services
                 ContentId = windowType.FullName // Ensure ContentId is the fully qualified type name
             };
 
+
             // Track the window in the dictionary
             _openWindows[windowType] = anchorable;
 
             e.Content = userControl;
-        }
-
-        public void LoadLayout(string layoutName)
-        {
-            if (_layoutDictionary.TryGetValue(layoutName, out var resourceName))
-            {
-                var xmlReader = XmlReader.Create(new StringReader(_layoutDictionary[layoutName]));
-                var serializer = new XmlLayoutSerializer(_dockingManager);
-                serializer.LayoutSerializationCallback += LayoutSerializationCallback;
-                serializer.Deserialize(xmlReader);
-            }
-            else
-            {
-                throw new KeyNotFoundException($"Layout with name {layoutName} not found.");
-            }
         }
 
         private string GetXmlContent(string resourceName)

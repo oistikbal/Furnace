@@ -58,7 +58,7 @@ namespace DX12Editor.ViewModels
             _dockingManager = dockingManager;
             _windowsService = new WindowsService(_serviceProvider, dockingManager);
             SaveLayout = ReactiveCommand.Create(_windowsService.Save);
-            _windowsService.LoadLayout($"{_layoutsPrefix}Default.xml");
+            //_windowsService.LoadLayout($"{_layoutsPrefix}Default.xml");
         }
 
         private void LoadWindowItems()
