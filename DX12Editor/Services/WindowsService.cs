@@ -16,7 +16,7 @@ namespace DX12Editor.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly DockingManager _dockingManager;
-        private readonly Dictionary<Type, LayoutAnchorable> _openWindows = new();
+        private readonly Dictionary<Type, LayoutContent> _openWindows = new();
 
         public WindowsService(IServiceProvider serviceProvider, DockingManager dockingManager)
         {
@@ -32,24 +32,19 @@ namespace DX12Editor.Services
             }
 
             var attribute = windowType.GetCustomAttribute<WindowAttribute>();
-
             if (attribute == null)
             {
                 throw new InvalidOperationException($"The window type {windowType.Name} does not have a {nameof(WindowAttribute)}.");
             }
 
+            // Check if the window is already open
             if (_openWindows.TryGetValue(windowType, out var existingAnchorable))
             {
-                if (existingAnchorable.IsVisible)
-                {
-                    existingAnchorable.IsActive = true;
-                    return;
-                }
+                existingAnchorable.IsActive = true;
+                return;
             }
 
-
-            var viewModelType = attribute.ViewModelType;
-            var viewModel = (ViewModelBase)_serviceProvider.GetRequiredService(viewModelType);
+            var viewModel = (ViewModelBase)_serviceProvider.GetRequiredService(attribute.ViewModelType);
             var userControl = (UserControl)_serviceProvider.GetRequiredService(windowType);
             userControl.DataContext = viewModel;
 
@@ -57,7 +52,7 @@ namespace DX12Editor.Services
             var anchorable = new LayoutAnchorable
             {
                 Content = userControl,
-                Title = attribute.Name, // Assuming your ViewModel has a DisplayName property
+                Title = attribute.Name,
                 FloatingWidth = 400,
                 FloatingHeight = 300,
             };
@@ -70,9 +65,13 @@ namespace DX12Editor.Services
             // Show the floating window
             anchorable.Float();
             anchorable.IsActive = true;
+            anchorable.CanClose = true;
 
-            // Handle the closing event
-            anchorable.Closed += (s, e) => _openWindows.Remove(windowType);
+            // Handle the closing event to update the dictionary
+            anchorable.Closed += (s, e) =>
+            {
+                _openWindows.Remove(windowType);
+            };
         }
 
         private void UpdateContentId(ILayoutContainer layoutContainer)
@@ -109,6 +108,59 @@ namespace DX12Editor.Services
             }
         }
 
+        private void UpdateOpenWindows(ILayoutContainer layoutContainer)
+        {
+            foreach (var child in layoutContainer.Children)
+            {
+                switch (child)
+                {
+                    case LayoutAnchorablePane layoutAnchorablePane:
+                        foreach (var anchorable in layoutAnchorablePane.Children)
+                        {
+                            if (anchorable.Content is UserControl userControl)
+                            {
+                                var windowType = userControl.GetType();
+                                _openWindows[windowType] = anchorable;
+                                anchorable.CanClose = true;
+
+                                // Attach Closed event to properly track the window closure
+                                anchorable.Closed += (s, e) =>
+                                {
+                                    if (_openWindows.TryGetValue(windowType, out var existingAnchorable))
+                                    {
+                                        _openWindows.Remove(windowType);
+                                    }
+                                };
+                            }
+                        }
+                        break;
+
+                    case LayoutDocumentPane layoutDocumentPane:
+                        foreach (var document in layoutDocumentPane.Children)
+                        {
+                            if (document.Content is UserControl userControl)
+                            {
+                                var windowType = userControl.GetType();
+                                _openWindows[windowType] = document;
+                                document.CanClose = true;
+
+                                document.Closed += (s, e) =>
+                                {
+                                    if (_openWindows.TryGetValue(windowType, out var existingAnchorable))
+                                    {
+                                        _openWindows.Remove(windowType);
+                                    }
+                                };
+                            }
+                        }
+                        break;
+                    case ILayoutContainer subContainer:
+                        UpdateOpenWindows(subContainer); // Recursively update sub-containers
+                        break;
+                }
+            }
+        }
+
         public void Save()
         {
             UpdateContentId(_dockingManager.Layout);
@@ -126,7 +178,7 @@ namespace DX12Editor.Services
             var sl = new XmlLayoutSerializer(_dockingManager);
             sl.LayoutSerializationCallback += LayoutSerializationCallback;
             sl.Deserialize(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Default.xml"));
-            _dockingManager.UpdateLayout();
+            UpdateOpenWindows(_dockingManager.Layout);
         }
 
         private void LayoutSerializationCallback(object sender, LayoutSerializationCallbackEventArgs e)
@@ -135,10 +187,10 @@ namespace DX12Editor.Services
 
             // Attempt to resolve the window type from ContentId
             var windowType = Type.GetType(contentId);
-            Debug.WriteLine(windowType);
             if (windowType == null || !typeof(UserControl).IsAssignableFrom(windowType))
             {
                 Debug.WriteLine($"Unable to restore window for ContentId: {contentId}");
+                e.Cancel = true;
                 return;
             }
 
@@ -146,6 +198,7 @@ namespace DX12Editor.Services
             if (attribute == null)
             {
                 Debug.WriteLine($"Missing {nameof(WindowAttribute)} for window type: {windowType.Name}");
+                e.Cancel = true;
                 return;
             }
 
