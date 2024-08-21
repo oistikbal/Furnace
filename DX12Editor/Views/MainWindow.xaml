@@ -142,13 +142,17 @@
     <CustomChromeWindow.RightWindowCommands>
         <Grid Margin="4,6">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Menu Grid.Column="1" Margin="0,2,0,0">
+            <Menu Grid.Column="0" Margin="0,2,0,0">
                 <MenuItem Header="Layout">
                     <MenuItem Header="Default" />
                 </MenuItem>
             </Menu>
+            <Button Grid.Column="1" Margin="0,2,0,0"  Content="Save" Command="{Binding SaveLayout}"/>
+            <Button Grid.Column="2" Margin="0,2,0,0" Content="Load" Command="{Binding LoadLayout}"/>
         </Grid>
     </CustomChromeWindow.RightWindowCommands>
 

@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reactive;
 using System.Reflection;
+using System.Xml;
 using AvalonDock;
-using DX12Editor.Models;
+using AvalonDock.Layout.Serialization;
 using DX12Editor.Services;
 using DX12Editor.Views.Windows;
 using ReactiveUI;
@@ -19,16 +21,22 @@ namespace DX12Editor.ViewModels
 
         public List<WindowItem> WindowItems { get; private set; }
         public ReactiveCommand<WindowItem, Unit> OpenWindowCommand { get; private set; }
+        public ReactiveCommand<Unit, Unit> SaveLayout { get; private set; }
+        public ReactiveCommand<Unit, Unit> LoadLayout { get; private set; }
 
-        private WindowsService _windowManager;
+        private WindowsService _windowsService;
         private IServiceProvider _serviceProvider;
+        private DockingManager _dockingManager;
 
         public string SceneName { get => "SampleScene"; }
         public string ProjectName { get => "NewProject"; }
 
         public void SetDockingManager(DockingManager dockingManager)
         {
-            _windowManager = new WindowsService(_serviceProvider, dockingManager);
+            _dockingManager = dockingManager;
+            _windowsService = new WindowsService(_serviceProvider, dockingManager);
+            SaveLayout = ReactiveCommand.Create(_windowsService.Save);
+            LoadLayout = ReactiveCommand.Create(_windowsService.Load);
         }
 
         public MainWindowViewModel(IServiceProvider serviceProvider)
@@ -36,7 +44,6 @@ namespace DX12Editor.ViewModels
             _serviceProvider = serviceProvider;
             WindowItems = new List<WindowItem>();
             OpenWindowCommand = ReactiveCommand.Create<WindowItem>(item => OpenWindow(item));
-
             LoadWindowItems();
         }
 
@@ -58,7 +65,7 @@ namespace DX12Editor.ViewModels
 
         private void OpenWindow(WindowItem windowItem)
         {
-            _windowManager.ShowFloatingWindow(windowItem.Type);
+            _windowsService.ShowFloatingWindow(windowItem.Type);
         }
     }
 }
