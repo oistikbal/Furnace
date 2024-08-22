@@ -36,9 +36,4 @@
     <PackageReference Include="ReactiveUI.WPF" Version="20.1.1" />
   </ItemGroup>
 
-
-  <ItemGroup>
-	<Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

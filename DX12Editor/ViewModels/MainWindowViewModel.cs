@@ -1,11 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Reactive;
 using System.Reflection;
-using System.Xml;
 using AvalonDock;
-using AvalonDock.Layout.Serialization;
 using DX12Editor.Services;
 using DX12Editor.Views.Windows;
 using ReactiveUI;
@@ -33,51 +29,27 @@ namespace DX12Editor.ViewModels
         public ReactiveCommand<Unit, Unit> SaveLayout { get; private set; }
 
         private WindowsService _windowsService;
-        private IServiceProvider _serviceProvider;
-        private DockingManager _dockingManager;
 
         private readonly string _layoutsPrefix;
 
         public string SceneName { get => "SampleScene"; }
         public string ProjectName { get => "NewProject"; }
 
-        public MainWindowViewModel(IServiceProvider serviceProvider)
+        public MainWindowViewModel(WindowsService windowsService)
         {
             _layoutsPrefix = $"{Assembly.GetExecutingAssembly().GetName().Name}.Resources.Layouts.";
-            _serviceProvider = serviceProvider;
             WindowItems = new();
             Layouts = new();
+            _windowsService = windowsService;
             OpenWindowCommand = ReactiveCommand.Create<WindowItem>(item => OpenWindow(item));
             SelectLayoutCommand = ReactiveCommand.Create<LayoutResource>(item => SelectLayout(item));
+            SaveLayout = ReactiveCommand.Create(_windowsService.Save);
+            _windowsService.LoadLayout($"{_layoutsPrefix}Default.xml");
             LoadWindowItems();
             LoadAllLayoutResourceNames(_layoutsPrefix);
         }
-
-        public void SetDockingManager(DockingManager dockingManager)
-        {
-            _dockingManager = dockingManager;
-            _windowsService = new WindowsService(_serviceProvider, dockingManager);
-            SaveLayout = ReactiveCommand.Create(_windowsService.Save);
-            //_windowsService.LoadLayout($"{_layoutsPrefix}Default.xml");
-        }
-
-        private void LoadWindowItems()
-        {
-            var windowTypes = Assembly.GetExecutingAssembly()
-                                      .GetTypes()
-                                      .Where(t => t.GetCustomAttributes<WindowAttribute>().Any());
-
-            foreach (var type in windowTypes)
-            {
-                var attribute = type.GetCustomAttribute<WindowAttribute>();
-                if (attribute != null)
-                {
-                    WindowItems.Add(new WindowItem { Name = attribute.Name, Type = type });
-                }
-            }
-        }
-
-        public void LoadAllLayoutResourceNames(string folderName)
+        
+        private void LoadAllLayoutResourceNames(string folderName)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var resourceNames = assembly.GetManifestResourceNames();
@@ -95,6 +67,22 @@ namespace DX12Editor.ViewModels
             foreach (var layout in layoutResources)
             {
                 Layouts.Add(layout);
+            }
+        }
+
+        private void LoadWindowItems()
+        {
+            var windowTypes = Assembly.GetExecutingAssembly()
+                                      .GetTypes()
+                                      .Where(t => t.GetCustomAttributes<WindowAttribute>().Any());
+
+            foreach (var type in windowTypes)
+            {
+                var attribute = type.GetCustomAttribute<WindowAttribute>();
+                if (attribute != null)
+                {
+                    WindowItems.Add(new WindowItem { Name = attribute.Name, Type = type });
+                }
             }
         }
 

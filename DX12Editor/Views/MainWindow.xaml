@@ -165,7 +165,7 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </Menu>
-            <Button Grid.Column="1" Margin="0,2,0,0"  Content="Save" Command="{Binding SaveLayout}"/>
+            <Button Grid.Column="1" Margin="0,2,0,0" Visibility="Hidden" Content="Save" Command="{Binding SaveLayout}"/>
         </Grid>
     </CustomChromeWindow.RightWindowCommands>
 

@@ -5,11 +5,10 @@ namespace DX12Editor.Views
 {
     public partial class MainWindow : CustomChromeWindow
     {
-        public MainWindow(MainWindowViewModel viewModel, IServiceProvider serviceProvider)
+        public MainWindow()
         {
             InitializeComponent();
-            viewModel.SetDockingManager(dockManager);
-            DataContext = viewModel;
+            Closed += (object? sender, EventArgs e) => { System.Environment.Exit(0); };
         }
     }
 }

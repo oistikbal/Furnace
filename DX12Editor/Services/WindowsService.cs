@@ -17,9 +17,7 @@ namespace DX12Editor.Services
         private readonly IServiceProvider _serviceProvider;
         private readonly DockingManager _dockingManager;
         private readonly Dictionary<Type, LayoutContent> _openWindows = new();
-        private readonly Dictionary<string, string> _layoutDictionary = new();
-
-
+        private readonly Dictionary<string, string> _layouts = new();
 
         public WindowsService(IServiceProvider serviceProvider, DockingManager dockingManager)
         {
@@ -79,9 +77,9 @@ namespace DX12Editor.Services
         }
         public void LoadLayout(string layoutName)
         {
-            if (_layoutDictionary.TryGetValue(layoutName, out var resourceName))
+            if (_layouts.TryGetValue(layoutName, out var resourceName))
             {
-                var xmlReader = XmlReader.Create(new StringReader(_layoutDictionary[layoutName]));
+                var xmlReader = XmlReader.Create(new StringReader(_layouts[layoutName]));
                 var serializer = new XmlLayoutSerializer(_dockingManager);
                 serializer.LayoutSerializationCallback += LayoutSerializationCallback;
                 serializer.Deserialize(xmlReader);
@@ -97,7 +95,7 @@ namespace DX12Editor.Services
         {
             UpdateContentId(_dockingManager.Layout);
             var sl = new XmlLayoutSerializer(_dockingManager);
-            using var fs = XmlWriter.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Default.xml"), new XmlWriterSettings()
+            using var fs = XmlWriter.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NewLayout.xml"), new XmlWriterSettings()
             {
                 Indent = true,
                 IndentChars = "\t"
@@ -263,7 +261,7 @@ namespace DX12Editor.Services
 
         private void LoadLayoutsFromResources()
         {
-            _layoutDictionary.Clear();
+            _layouts.Clear();
             var assembly = Assembly.GetExecutingAssembly();
             var resourceNames = assembly.GetManifestResourceNames();
 
@@ -271,7 +269,7 @@ namespace DX12Editor.Services
             {
                 if (resourceName.EndsWith(".xml") && resourceName.Contains("Layouts"))
                 {
-                    _layoutDictionary[resourceName] = GetXmlContent(resourceName);
+                    _layouts[resourceName] = GetXmlContent(resourceName);
                 }
             }
         }

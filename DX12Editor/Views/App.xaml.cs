@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using AvalonDock;
+using DX12Editor.Services;
 using DX12Editor.ViewModels;
 using DX12Editor.ViewModels.Windows;
 using DX12Editor.Views.Windows;
@@ -18,21 +21,41 @@ namespace DX12Editor.Views
 
             Debug.WriteLine(e.Args.Length);
             var services = new ServiceCollection();
-            ConfigureServices(services);
+            ConfigureServices(services, e);
 
             _serviceProvider = services.BuildServiceProvider();
-
             _serviceProvider.GetRequiredService<ConsoleWindowViewModel>();
+
+            _serviceProvider.GetRequiredService<WindowsService>();
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            mainWindow.DataContext = _serviceProvider.GetRequiredService<MainWindowViewModel>();
             mainWindow.Show();
-            mainWindow.Closed += (object? sender, EventArgs e) => { System.Environment.Exit(0); };
         }
 
-        private void ConfigureServices(IServiceCollection services)
+        private void ConfigureServices(IServiceCollection services, StartupEventArgs e)
         {
             RegisterWindowsWithAttribute(services, Assembly.GetExecutingAssembly());
-            services.AddSingleton<MainWindowViewModel>();
-            services.AddTransient<MainWindow>();
+
+            services.AddSingleton<MainWindow>(provider =>
+            {
+                var mainWindow = new MainWindow();
+                return mainWindow;
+            });
+
+            services.AddSingleton<MainWindowViewModel>(provider =>
+            {
+                return new MainWindowViewModel(provider.GetRequiredService<WindowsService>());
+            });
+
+            services.AddSingleton<WindowsService>(provider =>
+            {
+                return new WindowsService(provider, provider.GetRequiredService<MainWindow>().dockManager);
+            });
+
+            services.AddSingleton<ProjectService>(provider =>
+            {
+                return new ProjectService(string.Empty);
+            });
         }
 
         public void RegisterWindowsWithAttribute(IServiceCollection services, Assembly assembly)
