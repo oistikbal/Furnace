@@ -6,22 +6,23 @@ using System.Xml;
 using AvalonDock;
 using AvalonDock.Layout;
 using AvalonDock.Layout.Serialization;
+using DX12Editor.Attributes;
+using DX12Editor.Providers;
 using DX12Editor.ViewModels;
-using DX12Editor.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DX12Editor.Services
 {
     public class WindowsService
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ViewModelProvider _viewModelProvider;
         private readonly DockingManager _dockingManager;
         private readonly Dictionary<Type, LayoutContent> _openWindows = new();
         private readonly Dictionary<string, string> _layouts = new();
 
-        public WindowsService(IServiceProvider serviceProvider, DockingManager dockingManager)
+        public WindowsService(ViewModelProvider viewModelProvider, DockingManager dockingManager)
         {
-            _serviceProvider = serviceProvider;
+            _viewModelProvider = viewModelProvider;
             _dockingManager = dockingManager;
             LoadLayoutsFromResources();
         }
@@ -46,8 +47,8 @@ namespace DX12Editor.Services
                 return;
             }
 
-            var viewModel = (ViewModelBase)_serviceProvider.GetRequiredService(attribute.ViewModelType);
-            var userControl = (UserControl)_serviceProvider.GetRequiredService(windowType);
+            var viewModel = (ViewModelBase)_viewModelProvider.GetViewModel(attribute.ViewModelType);
+            var userControl = (UserControl)Activator.CreateInstance(windowType);
             userControl.DataContext = viewModel;
 
             // Create a new LayoutAnchorable and add it to a floating window
@@ -220,10 +221,10 @@ namespace DX12Editor.Services
 
             // Resolve the ViewModel
             var viewModelType = attribute.ViewModelType;
-            var viewModel = (ViewModelBase)_serviceProvider.GetRequiredService(viewModelType);
+            var viewModel = (ViewModelBase)_viewModelProvider.GetViewModel(viewModelType);
 
             // Create a new UserControl and set the DataContext
-            var userControl = (UserControl)_serviceProvider.GetRequiredService(windowType);
+            var userControl = (UserControl)Activator.CreateInstance(windowType);
             userControl.DataContext = viewModel;
 
             var anchorable = new LayoutAnchorable

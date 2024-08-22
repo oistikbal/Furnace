@@ -1,6 +1,6 @@
 ﻿using DX12Editor.ViewModels;
 
-namespace DX12Editor.Views.Windows
+namespace DX12Editor.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class WindowAttribute : Attribute

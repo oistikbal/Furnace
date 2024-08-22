@@ -1,12 +1,11 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
-using AvalonDock;
+using DX12Editor.Attributes;
+using DX12Editor.Providers;
 using DX12Editor.Services;
 using DX12Editor.ViewModels;
 using DX12Editor.ViewModels.Windows;
-using DX12Editor.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DX12Editor.Views
@@ -49,7 +48,7 @@ namespace DX12Editor.Views
 
             services.AddSingleton<WindowsService>(provider =>
             {
-                return new WindowsService(provider, provider.GetRequiredService<MainWindow>().dockManager);
+                return new WindowsService(new ViewModelProvider(provider), provider.GetRequiredService<MainWindow>().dockManager);
             });
 
             services.AddSingleton<ProjectService>(provider =>
@@ -69,8 +68,6 @@ namespace DX12Editor.Views
                 var attribute = windowType.GetCustomAttribute<WindowAttribute>();
                 if (attribute != null)
                 {
-                    // Register the window type
-                    services.AddTransient(windowType);
 
                     // Ensure the ViewModelType is valid and register it
                     var viewModelType = attribute.ViewModelType;

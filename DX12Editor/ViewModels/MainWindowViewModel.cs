@@ -2,8 +2,8 @@
 using System.Reactive;
 using System.Reflection;
 using AvalonDock;
+using DX12Editor.Attributes;
 using DX12Editor.Services;
-using DX12Editor.Views.Windows;
 using ReactiveUI;
 
 namespace DX12Editor.ViewModels

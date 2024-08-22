@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using DX12Editor.Attributes;
 using DX12Editor.ViewModels.Windows;
 
 namespace DX12Editor.Views.Windows
