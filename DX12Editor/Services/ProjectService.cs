@@ -16,6 +16,7 @@ namespace DX12Editor.Services
         {
             if (!string.IsNullOrEmpty(path))
             {
+                Debug.WriteLine(path);
                 _project = Serializers.Serializer.FromFile<Project>(path);
             }
             else 

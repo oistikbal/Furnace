@@ -13,20 +13,23 @@ namespace DX12Editor.Views
     public partial class App : Application
     {
         private IServiceProvider? _serviceProvider;
+        private ProjectDialog? _projectDialog;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            var projectDialog = new ProjectDialog();
-            projectDialog.DataContext = new ProjectDialogViewModel();
-            projectDialog.Show();
+            _projectDialog = new ProjectDialog();
+            var projectDialogViewModel = new ProjectDialogViewModel();
+            _projectDialog.DataContext = projectDialogViewModel;
+            projectDialogViewModel.ProjectOpen += OnProjectOpen;
+            _projectDialog.Show();
+        }
 
-            /*
+        private void OnProjectOpen(string path)
+        {
             var services = new ServiceCollection();
-            ConfigureServices(services, e);
-
-
+            ConfigureServices(services, path);
             _serviceProvider = services.BuildServiceProvider();
 
             _serviceProvider.GetRequiredService<ConsoleWindowViewModel>();
@@ -36,10 +39,10 @@ namespace DX12Editor.Views
             var mainWindow = _serviceProvider.GetRequiredService<EditorWindow>();
             mainWindow.DataContext = _serviceProvider.GetRequiredService<EditorWindowViewModel>();
             mainWindow.Show();
-            */
+            _projectDialog?.Close();
         }
 
-        private void ConfigureServices(IServiceCollection services, StartupEventArgs e)
+        private void ConfigureServices(IServiceCollection services, string path)
         {
             RegisterWindowsWithAttribute(services, Assembly.GetExecutingAssembly());
 
@@ -61,7 +64,7 @@ namespace DX12Editor.Views
 
             services.AddSingleton<ProjectService>(provider =>
             {
-                return new ProjectService(GetProjectPathFromArgs(e.Args));
+                return new ProjectService(path);
             });
         }
 

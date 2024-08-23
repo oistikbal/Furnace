@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using DX12Editor.Models;
 using DX12Editor.Views.Project;
 using ReactiveUI;
@@ -53,6 +54,8 @@ namespace DX12Editor.ViewModels
         public ReactiveCommand<Unit, Unit> ProjectBackButton { get; }
         public ReactiveCommand<Unit, Unit> ProjectLocationButton { get; }
         public ReactiveCommand<Unit, Unit> ProjectCreateNextButton { get; }
+
+        public event Action<string> ProjectOpen;
 
         public ProjectDialogViewModel()
         {
@@ -121,6 +124,7 @@ namespace DX12Editor.ViewModels
         private void OnProjectCreateNextButton()
         {
             Project.CreateProject(Location, ProjectName);
+            ProjectOpen?.Invoke($"{Path.Combine(Path.Combine(Location, ProjectName), $"{ProjectName}{Project.Extenion}")}");
         }
 
         private bool IsValidFileName(string fileName)
