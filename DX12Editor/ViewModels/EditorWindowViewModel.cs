@@ -8,7 +8,7 @@ using ReactiveUI;
 
 namespace DX12Editor.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class EditorWindowViewModel : ViewModelBase
     {
         public class WindowItem
         {
@@ -35,7 +35,7 @@ namespace DX12Editor.ViewModels
         public string SceneName { get => "SampleScene"; }
         public string ProjectName { get => "NewProject"; }
 
-        public MainWindowViewModel(WindowsService windowsService)
+        public EditorWindowViewModel(WindowsService windowsService)
         {
             _layoutsPrefix = $"{Assembly.GetExecutingAssembly().GetName().Name}.Resources.Layouts.";
             WindowItems = new();

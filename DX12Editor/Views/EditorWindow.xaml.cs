@@ -3,9 +3,9 @@ using DX12Editor.ViewModels;
 
 namespace DX12Editor.Views
 {
-    public partial class MainWindow : CustomChromeWindow
+    public partial class EditorWindow : CustomChromeWindow
     {
-        public MainWindow()
+        public EditorWindow()
         {
             InitializeComponent();
             Closed += (object? sender, EventArgs e) => { System.Environment.Exit(0); };

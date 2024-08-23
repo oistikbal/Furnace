@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace DX12Editor.Models
 {
-    [DataContract]
+    [DataContract()]
     public class Project
     {
-        public static string Extenion { get; } = ".dx12";
+        public static string Extenion { get; } = ".dx12project";
+        [DataMember]
         public string Name { get; set; }
         public string Path { get; private set; }
         public string FullPath => $"{Path}{Name}{Extenion}";
+        [DataMember(Name = "Scenes")]
+        private List<Scene> _scenes = new List<Scene>();
+
+        public Project(string path, string name = "NewProject")
+        {
+            Path = path;
+            Name = name;
+        }
     }
 }

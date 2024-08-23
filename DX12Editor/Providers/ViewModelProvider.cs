@@ -19,7 +19,16 @@ namespace DX12Editor.Providers
 
         public object GetViewModel(Type viewModelType)
         {
-            return _serviceProvider.GetRequiredService(viewModelType);
+            // Resolve the service from the service provider
+            var viewModel = _serviceProvider.GetRequiredService(viewModelType);
+
+            // Check if the resolved type is a subclass of ViewModelBase
+            if (!typeof(ViewModelBase).IsAssignableFrom(viewModelType))
+            {
+                throw new InvalidOperationException($"The type {viewModelType.FullName} is not a valid ViewModelBase.");
+            }
+
+            return viewModel;
         }
     }
 }

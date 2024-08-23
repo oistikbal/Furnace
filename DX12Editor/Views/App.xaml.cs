@@ -18,46 +18,54 @@ namespace DX12Editor.Views
         {
             base.OnStartup(e);
 
-            Debug.WriteLine(e.Args.Length);
+            var projectDialog = new ProjectDialog();
+            projectDialog.DataContext = new ProjectDialogViewModel();
+            projectDialog.Show();
+
+            /*
             var services = new ServiceCollection();
             ConfigureServices(services, e);
 
-            _serviceProvider = services.BuildServiceProvider();
-            _serviceProvider.GetRequiredService<ConsoleWindowViewModel>();
 
+            _serviceProvider = services.BuildServiceProvider();
+
+            _serviceProvider.GetRequiredService<ConsoleWindowViewModel>();
+            _serviceProvider.GetRequiredService<ProjectService>();
             _serviceProvider.GetRequiredService<WindowsService>();
-            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.DataContext = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+
+            var mainWindow = _serviceProvider.GetRequiredService<EditorWindow>();
+            mainWindow.DataContext = _serviceProvider.GetRequiredService<EditorWindowViewModel>();
             mainWindow.Show();
+            */
         }
 
         private void ConfigureServices(IServiceCollection services, StartupEventArgs e)
         {
             RegisterWindowsWithAttribute(services, Assembly.GetExecutingAssembly());
 
-            services.AddSingleton<MainWindow>(provider =>
+            services.AddSingleton<EditorWindow>(provider =>
             {
-                var mainWindow = new MainWindow();
+                var mainWindow = new EditorWindow();
                 return mainWindow;
             });
 
-            services.AddSingleton<MainWindowViewModel>(provider =>
+            services.AddSingleton<EditorWindowViewModel>(provider =>
             {
-                return new MainWindowViewModel(provider.GetRequiredService<WindowsService>());
+                return new EditorWindowViewModel(provider.GetRequiredService<WindowsService>());
             });
 
             services.AddSingleton<WindowsService>(provider =>
             {
-                return new WindowsService(new ViewModelProvider(provider), provider.GetRequiredService<MainWindow>().dockManager);
+                return new WindowsService(new ViewModelProvider(provider), provider.GetRequiredService<EditorWindow>().dockManager);
             });
 
             services.AddSingleton<ProjectService>(provider =>
             {
-                return new ProjectService(string.Empty);
+                return new ProjectService(GetProjectPathFromArgs(e.Args));
             });
         }
 
-        public void RegisterWindowsWithAttribute(IServiceCollection services, Assembly assembly)
+        private void RegisterWindowsWithAttribute(IServiceCollection services, Assembly assembly)
         {
             var windowTypes = assembly.GetTypes()
                 .Where(t => t.GetCustomAttribute<WindowAttribute>() != null)
@@ -81,6 +89,18 @@ namespace DX12Editor.Views
                     }
                 }
             }
+        }
+
+        private string GetProjectPathFromArgs(string[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] == "-projectPath" && i + 1 < args.Length)
+                {
+                    return args[i + 1]; // The value following -projectPath
+                }
+            }
+            return null;
         }
 
     }

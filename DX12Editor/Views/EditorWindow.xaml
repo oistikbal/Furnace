@@ -1,4 +1,4 @@
-﻿<CustomChromeWindow x:Class="DX12Editor.Views.MainWindow"
+﻿<CustomChromeWindow x:Class="DX12Editor.Views.EditorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
