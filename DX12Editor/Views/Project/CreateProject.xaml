@@ -25,17 +25,17 @@
             <TextBlock Grid.Row="0" Text="Configure Your Project" FontSize="22" Margin="20,0,0,0"/>
             <TextBlock Grid.Row="1" Text="Default Project" FontSize="16" Margin="20,20,0,0"/>
             <TextBlock Grid.Row="2" Text="Project Name" Margin="20,20,0,0"/>
-            <TextBox Grid.Row="3" Margin="20,5,35,0"/>
+            <TextBox Grid.Row="3" Text="{Binding ProjectName}" Margin="20,5,35,0"/>
             <TextBlock Grid.Row="4" Text="Location" Margin="20,5,0,0"/>
             <Grid Grid.Row="5" Margin="20,5,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox  Grid.Column="0"/>
+                <TextBox  Grid.Column="0" Text="{Binding Location}"/>
                 <Button Grid.Column="1" Command="{Binding ProjectLocationButton}" Content="..." Margin="10,0,0,0" MinWidth="25" HorizontalAlignment="Center"></Button>
             </Grid>
-            <TextBlock Grid.Row="6" Text="Project will be Created in" Margin="20,20,0,0"/>
+            <TextBlock Grid.Row="6" Text="{Binding ProjectLocationMessage}" Margin="20,20,0,0"/>
         </Grid>
         <Grid Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="120,0,20,20">
             <Grid.ColumnDefinitions>
@@ -51,8 +51,8 @@
                     <Setter Property="Margin" Value="15,0,0,0" />
                 </Style>
             </Grid.Resources>
-            <Button Grid.Column="0" Content="Back" x:Name="CreateButton" Command="{Binding ProjectBackButton}"/>
-            <Button Grid.Column="1" Content="Next" x:Name="OpenButton" Command="{Binding ProjectOpenButton}"/>
+            <Button Grid.Column="0" Content="Back" x:Name="BackButton" Command="{Binding ProjectBackButton}"/>
+            <Button Grid.Column="1" Content="Next" x:Name="NextButton" Command="{Binding ProjectCreateNextButton}" IsEnabled="{Binding IsNextButtonEnabled}"/>
         </Grid>
     </Grid>
 
