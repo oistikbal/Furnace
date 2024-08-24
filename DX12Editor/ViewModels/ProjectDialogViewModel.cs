@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -15,11 +16,29 @@ namespace DX12Editor.ViewModels
     {
         private System.Windows.Controls.UserControl? _borderContent;
         private readonly CreateProject _createProject;
-        private readonly RecentProjects _recentProjects;
+        private readonly Views.Project.RecentProjects _recentProjects;
 
         private string _location;
         private string _projectName;
         private string _projectLocationMessage;
+        private RecentProject _selectedRecentProject;
+        private ObservableCollection<RecentProject> _recentProjectList;
+
+        public RecentProject SelectedRecentProject
+        {
+            get => _selectedRecentProject;
+            set
+            {
+                OnProjectSelected(value);  // Handle the item selection
+                this.RaiseAndSetIfChanged(ref _selectedRecentProject, value);            
+            }
+        }
+
+        public ObservableCollection<RecentProject> RecentProjects
+        {
+            get => _recentProjectList;
+            set => this.RaiseAndSetIfChanged(ref _recentProjectList, value);
+        }
 
         public string ProjectName
         {
@@ -65,8 +84,21 @@ namespace DX12Editor.ViewModels
             ProjectLocationButton = ReactiveCommand.Create(OnProjectLocationButton);
             ProjectCreateNextButton = ReactiveCommand.Create(OnProjectCreateNextButton);
 
-            _createProject = new CreateProject();
-            _recentProjects = new RecentProjects();
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentProjects.xml");
+
+            if (!File.Exists(filePath))
+            {
+                RecentProjects = new ObservableCollection<RecentProject>();
+                Serializers.Serializer.ToFile<Models.RecentProjects>(new Models.RecentProjects(), filePath);
+            }
+            else
+            {
+                // If the file exists, read the data from the file
+                RecentProjects = Serializers.Serializer.FromFile<ObservableCollection<RecentProject>>(filePath);
+            }
+
+            _createProject = new();
+            _recentProjects = new();
             BorderContent = _recentProjects;
 
             this.WhenAnyValue(x => x.ProjectName, x => x.Location)
@@ -97,6 +129,8 @@ namespace DX12Editor.ViewModels
             switch (openFileDialog.ShowDialog())
             {
                 case DialogResult.OK:
+                    AddOrUpdateRecentProject(openFileDialog.FileName);
+                    ProjectOpen?.Invoke(openFileDialog.FileName);
                     break;
                 default:
                     break;
@@ -124,6 +158,7 @@ namespace DX12Editor.ViewModels
         private void OnProjectCreateNextButton()
         {
             Project.CreateProject(Location, ProjectName);
+            AddOrUpdateRecentProject($"{Path.Combine(Path.Combine(Location, ProjectName), $"{ProjectName}{Project.Extenion}")}");
             ProjectOpen?.Invoke($"{Path.Combine(Path.Combine(Location, ProjectName), $"{ProjectName}{Project.Extenion}")}");
         }
 
@@ -177,6 +212,44 @@ namespace DX12Editor.ViewModels
                 // Handle any unexpected errors
                 ProjectLocationMessage = $"Error: {ex.Message}";
             }
+        }
+
+        private void AddOrUpdateRecentProject(string projectPath)
+        {
+            var existingProject = RecentProjects.FirstOrDefault(p => p.Path == projectPath);
+
+            if (existingProject != null)
+            {
+                // Update the timestamp if the project already exists
+                existingProject.LastOpened = DateTime.Now;
+            }
+            else
+            {
+                // Add a new project if it doesn't exist
+                var newProject = new RecentProject
+                {
+                    Name = Path.GetFileNameWithoutExtension(projectPath),
+                    Path = projectPath,
+                    LastOpened = DateTime.Now
+                };
+
+                RecentProjects.Add(newProject);
+            }
+
+            // Save the updated list to the XML file
+            SaveRecentProjects();
+        }
+
+        private void SaveRecentProjects()
+        {
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentProjects.xml");
+            Serializers.Serializer.ToFile(RecentProjects, filePath);
+        }
+
+        private void OnProjectSelected(RecentProject project)
+        {
+            Debug.WriteLine(project.Path);
+            ProjectOpen?.Invoke(project.Path);
         }
     }
 }
