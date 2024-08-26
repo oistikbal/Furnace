@@ -3,7 +3,9 @@ using System.Reactive;
 using System.Reflection;
 using AvalonDock;
 using DX12Editor.Attributes;
+using DX12Editor.Models;
 using DX12Editor.Services;
+using DynamicData;
 using ReactiveUI;
 
 namespace DX12Editor.ViewModels
@@ -22,20 +24,22 @@ namespace DX12Editor.ViewModels
             public string Path { get; set; }
         }
 
+
+        private WindowsService _windowsService;
+        private readonly string _layoutsPrefix;
+        private string _sceneName = "";
+        private string _projectName = "";
+
         public ObservableCollection<WindowItem> WindowItems { get; private set; }
         public ObservableCollection<LayoutResource> Layouts { get; private set; }
         public ReactiveCommand<WindowItem, Unit> OpenWindowCommand { get; private set; }
         public ReactiveCommand<LayoutResource, Unit> SelectLayoutCommand { get; private set; }
         public ReactiveCommand<Unit, Unit> SaveLayout { get; private set; }
 
-        private WindowsService _windowsService;
+        public string SceneName { get => _sceneName; set => this.RaiseAndSetIfChanged(ref _sceneName, value); }
+        public string ProjectName { get => _projectName; set => this.RaiseAndSetIfChanged(ref _projectName, value); }
 
-        private readonly string _layoutsPrefix;
-
-        public string SceneName { get => "SampleScene"; }
-        public string ProjectName { get => "NewProject"; }
-
-        public EditorWindowViewModel(WindowsService windowsService)
+        public EditorWindowViewModel(WindowsService windowsService, ProjectService projectService)
         {
             _layoutsPrefix = $"{Assembly.GetExecutingAssembly().GetName().Name}.Resources.Layouts.";
             WindowItems = new();
@@ -47,6 +51,13 @@ namespace DX12Editor.ViewModels
             _windowsService.LoadLayout($"{_layoutsPrefix}Default.xml");
             LoadWindowItems();
             LoadAllLayoutResourceNames(_layoutsPrefix);
+
+
+            MessageBus.Current.Listen<Project>().Subscribe(project => 
+            {
+                ProjectName = project.Name;
+            });
+            ProjectName = projectService.GetProject().Name;
         }
         
         private void LoadAllLayoutResourceNames(string folderName)
@@ -64,10 +75,7 @@ namespace DX12Editor.ViewModels
                 })
                 .ToList();
 
-            foreach (var layout in layoutResources)
-            {
-                Layouts.Add(layout);
-            }
+            Layouts.AddRange(layoutResources);
         }
 
         private void LoadWindowItems()

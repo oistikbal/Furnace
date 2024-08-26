@@ -7,6 +7,7 @@ using DX12Editor.Services;
 using DX12Editor.ViewModels;
 using DX12Editor.ViewModels.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using ReactiveUI;
 
 namespace DX12Editor.Views
 {
@@ -36,9 +37,10 @@ namespace DX12Editor.Views
             _serviceProvider.GetRequiredService<ProjectService>();
             _serviceProvider.GetRequiredService<WindowsService>();
 
-            var mainWindow = _serviceProvider.GetRequiredService<EditorWindow>();
-            mainWindow.DataContext = _serviceProvider.GetRequiredService<EditorWindowViewModel>();
-            mainWindow.Show();
+            var editorWindow = _serviceProvider.GetRequiredService<EditorWindow>();
+            editorWindow.DataContext = _serviceProvider.GetRequiredService<EditorWindowViewModel>();
+            editorWindow.Show();
+            MainWindow = editorWindow;
             _projectDialog?.Close();
         }
 
@@ -54,7 +56,7 @@ namespace DX12Editor.Views
 
             services.AddSingleton<EditorWindowViewModel>(provider =>
             {
-                return new EditorWindowViewModel(provider.GetRequiredService<WindowsService>());
+                return new EditorWindowViewModel(provider.GetRequiredService<WindowsService>(), provider.GetRequiredService<ProjectService>());
             });
 
             services.AddSingleton<WindowsService>(provider =>
@@ -64,7 +66,7 @@ namespace DX12Editor.Views
 
             services.AddSingleton<ProjectService>(provider =>
             {
-                return new ProjectService(path);
+                return new ProjectService(path, MessageBus.Current);
             });
         }
 

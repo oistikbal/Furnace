@@ -9,7 +9,7 @@ namespace DX12Editor.Models
     {
 
         [DataMember]
-        public string Name { get; set; }
+        public string Name { get; private set; }
         public string Path { get; private set; }
         public string FullPath => $"{Path}{Name}{Extenion}";
 
