@@ -1,19 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LayoutRoot>
-	<RootPanel Orientation="Vertical">
-		<LayoutPanel Orientation="Horizontal">
-			<LayoutAnchorablePaneGroup Orientation="Horizontal" DockWidth="384" FloatingWidth="400" FloatingHeight="300" FloatingLeft="680" FloatingTop="391">
-				<LayoutAnchorablePane FloatingWidth="400" FloatingHeight="300" FloatingLeft="680" FloatingTop="391">
-					<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Hierarchy" IsSelected="True" ContentId="DX12Editor.Views.Windows.HierarchyWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="680" FloatingTop="391" FloatingWidth="400" FloatingHeight="300" LastActivationTimeStamp="08/21/2024 09:51:18" />
+	<RootPanel Orientation="Horizontal">
+		<LayoutPanel Orientation="Vertical" DockWidth="1.6613924050632911*">
+			<LayoutPanel Orientation="Horizontal" DockHeight="0.9819819819819818*">
+				<LayoutAnchorablePaneGroup Orientation="Horizontal" DockWidth="384" FloatingWidth="400" FloatingHeight="300" FloatingLeft="680" FloatingTop="391">
+					<LayoutAnchorablePane DockWidth="384" FloatingWidth="400" FloatingHeight="300" FloatingLeft="680" FloatingTop="391">
+						<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Hierarchy" IsSelected="True" ContentId="DX12Editor.Views.Windows.HierarchyWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="680" FloatingTop="391" FloatingWidth="400" FloatingHeight="300" CanClose="True" LastActivationTimeStamp="09/01/2024 21:27:33" />
+					</LayoutAnchorablePane>
+				</LayoutAnchorablePaneGroup>
+				<LayoutPanel Orientation="Horizontal">
+					<LayoutDocumentPane>
+						<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Scene" IsSelected="True" IsLastFocusedDocument="True" ContentId="DX12Editor.Views.Windows.SceneWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="939" FloatingTop="398" FloatingWidth="400" FloatingHeight="300" CanClose="True" LastActivationTimeStamp="09/01/2024 21:27:41" />
+					</LayoutDocumentPane>
+				</LayoutPanel>
+			</LayoutPanel>
+			<LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="280" FloatingWidth="400" FloatingHeight="300" FloatingLeft="951" FloatingTop="995">
+				<LayoutAnchorablePane DockHeight="280" FloatingWidth="400" FloatingHeight="300" FloatingLeft="951" FloatingTop="995">
+					<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Console" IsSelected="True" ContentId="DX12Editor.Views.Windows.ConsoleWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="951" FloatingTop="995" FloatingWidth="400" FloatingHeight="300" CanClose="True" LastActivationTimeStamp="09/01/2024 21:27:19" />
 				</LayoutAnchorablePane>
 			</LayoutAnchorablePaneGroup>
-			<LayoutDocumentPane>
-				<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Scene" IsSelected="True" ContentId="DX12Editor.Views.Windows.SceneWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="939" FloatingTop="398" FloatingWidth="400" FloatingHeight="300" LastActivationTimeStamp="08/21/2024 09:51:21" />
-			</LayoutDocumentPane>
 		</LayoutPanel>
-		<LayoutAnchorablePaneGroup Orientation="Horizontal" DockHeight="268" FloatingWidth="400" FloatingHeight="300" FloatingLeft="709" FloatingTop="602">
-			<LayoutAnchorablePane DockHeight="268" FloatingWidth="400" FloatingHeight="300" FloatingLeft="709" FloatingTop="602">
-				<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Console" IsSelected="True" ContentId="DX12Editor.Views.Windows.ConsoleWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="709" FloatingTop="602" FloatingWidth="400" FloatingHeight="300" LastActivationTimeStamp="08/21/2024 09:51:15" />
+		<LayoutAnchorablePaneGroup Orientation="Horizontal" DockWidth="327" FloatingWidth="974" FloatingHeight="1051" FloatingLeft="953">
+			<LayoutAnchorablePane DockWidth="327" FloatingWidth="974" FloatingHeight="1051" FloatingLeft="953">
+				<LayoutAnchorable AutoHideMinWidth="100" AutoHideMinHeight="100" Title="Inspector" IsSelected="True" ContentId="DX12Editor.Views.Windows.InspectorWindow, DX12Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" FloatingLeft="953" FloatingWidth="974" FloatingHeight="1051" CanClose="True" LastActivationTimeStamp="09/01/2024 21:27:25" />
 			</LayoutAnchorablePane>
 		</LayoutAnchorablePaneGroup>
 	</RootPanel>
