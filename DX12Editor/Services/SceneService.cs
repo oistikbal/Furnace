@@ -15,12 +15,14 @@ namespace DX12Editor.Services
         private string _lastSceneFilePath;
         private Scene _activeScene;
         private string _activeScenePath;
+        private readonly string _projectPath;
 
-        public SceneService(string path)
+        public SceneService(string projectPath)
         {
-            _lastSceneFilePath = Path.Combine(Path.Combine(Path.GetDirectoryName(path), "Library"), "LastScene.txt");
+            _lastSceneFilePath = Path.Combine(Path.Combine(Path.GetDirectoryName(projectPath), "Library"), "LastScene.txt");
+            _projectPath = projectPath;
+            
 
-            // Check if the file exists and create it if it does not
             if (!File.Exists(_lastSceneFilePath))
             {
                 _activeScene = new Scene();

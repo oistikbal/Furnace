@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Windows;
 using DX12Editor.Attributes;
 using DX12Editor.Services;
@@ -27,10 +26,10 @@ namespace DX12Editor.Views
             _projectDialog.Show();
         }
 
-        private void OnProjectOpen(string path)
+        private void OnProjectOpen(string projectPath)
         {
             var services = new ServiceCollection();
-            ConfigureServices(services, path);
+            ConfigureServices(services, projectPath);
             _serviceProvider = services.BuildServiceProvider();
 
             _serviceProvider.GetRequiredService<ConsoleWindowViewModel>();
@@ -42,7 +41,7 @@ namespace DX12Editor.Views
             _projectDialog?.Close();
         }
 
-        private void ConfigureServices(IServiceCollection services, string path)
+        private void ConfigureServices(IServiceCollection services, string projectPath)
         {
             RegisterWindowsWithAttribute(services, Assembly.GetExecutingAssembly());
 
@@ -60,12 +59,12 @@ namespace DX12Editor.Views
 
             services.AddSingleton<ProjectService>(provider =>
             {
-                return new ProjectService(path, MessageBus.Current);
+                return new ProjectService(projectPath, MessageBus.Current);
             });
 
             services.AddSingleton<SceneService>(provider =>
             {
-                return new SceneService(path);
+                return new SceneService(projectPath);
             });
 
             services.AddSingleton<UndoService>();
