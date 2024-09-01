@@ -1,0 +1,7 @@
+﻿# Ignore Library and Log files (generated or cached data)
+Library/
+Logs/
+
+# IDE and editor-specific files
+.vscode/
+.idea/

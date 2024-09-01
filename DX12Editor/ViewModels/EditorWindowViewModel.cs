@@ -59,7 +59,7 @@ namespace DX12Editor.ViewModels
             });
             ProjectName = projectService.GetProject().Name;
         }
-        
+
         private void LoadAllLayoutResourceNames(string folderName)
         {
             var assembly = Assembly.GetExecutingAssembly();

@@ -2,8 +2,8 @@
 using System.Reflection;
 using System.Windows;
 using DX12Editor.Attributes;
-using DX12Editor.Providers;
 using DX12Editor.Services;
+using DX12Editor.Utilities.Providers;
 using DX12Editor.ViewModels;
 using DX12Editor.ViewModels.Windows;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,8 +34,6 @@ namespace DX12Editor.Views
             _serviceProvider = services.BuildServiceProvider();
 
             _serviceProvider.GetRequiredService<ConsoleWindowViewModel>();
-            _serviceProvider.GetRequiredService<ProjectService>();
-            _serviceProvider.GetRequiredService<WindowsService>();
 
             var editorWindow = _serviceProvider.GetRequiredService<EditorWindow>();
             editorWindow.DataContext = _serviceProvider.GetRequiredService<EditorWindowViewModel>();
@@ -48,11 +46,7 @@ namespace DX12Editor.Views
         {
             RegisterWindowsWithAttribute(services, Assembly.GetExecutingAssembly());
 
-            services.AddSingleton<EditorWindow>(provider =>
-            {
-                var mainWindow = new EditorWindow();
-                return mainWindow;
-            });
+            services.AddSingleton<EditorWindow>();
 
             services.AddSingleton<EditorWindowViewModel>(provider =>
             {
@@ -67,6 +61,11 @@ namespace DX12Editor.Views
             services.AddSingleton<ProjectService>(provider =>
             {
                 return new ProjectService(path, MessageBus.Current);
+            });
+
+            services.AddSingleton<SceneService>(provider =>
+            {
+                return new SceneService(path);
             });
         }
 
@@ -94,18 +93,6 @@ namespace DX12Editor.Views
                     }
                 }
             }
-        }
-
-        private string GetProjectPathFromArgs(string[] args)
-        {
-            for (int i = 0; i < args.Length; i++)
-            {
-                if (args[i] == "-projectPath" && i + 1 < args.Length)
-                {
-                    return args[i + 1]; // The value following -projectPath
-                }
-            }
-            return null;
         }
 
     }

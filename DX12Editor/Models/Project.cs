@@ -1,16 +1,18 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
+using DX12Editor.Utilities.Serializers;
 
 namespace DX12Editor.Models
 {
-    [DataContract()]
+    [DataContract]
     public class Project
     {
 
         [DataMember]
         public string Name { get; private set; }
-        public string Path { get; private set; }
+        public string Path { get; set; }
         public string FullPath => $"{Path}{Name}{Extenion}";
 
 
@@ -39,12 +41,40 @@ namespace DX12Editor.Models
             try
             {
                 // Assuming Serializer.ToFile takes an instance of Project and a file path
-                Serializers.Serializer.ToFile(new Project(path, name), projectFilePath);
+                Serializer.ToFile(new Project(path, name), projectFilePath);
+                CreateGitIgnoreFile(projectDirectory);
+
             }
             catch (Exception ex)
             {
                 // Handle any exceptions that occur during serialization
                 Debug.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        private static void CreateGitIgnoreFile(string path)
+        {
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceNames = assembly.GetManifestResourceNames();
+
+            foreach (var resourceName in resourceNames)
+            {
+                if (resourceName.EndsWith(".gitignore"))
+                {
+                    using (Stream resourceStream = assembly.GetManifestResourceStream(resourceName))
+                    {
+                        if (resourceStream != null)
+                        {
+                            string gitignoreFilePath = System.IO.Path.Combine(path, ".gitignore");
+                            using (FileStream fileStream = new FileStream(gitignoreFilePath, FileMode.Create, FileAccess.Write))
+                            {
+                                resourceStream.CopyTo(fileStream);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

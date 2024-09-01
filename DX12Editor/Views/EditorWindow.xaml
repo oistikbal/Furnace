@@ -27,12 +27,13 @@
             </Grid.ColumnDefinitions>
             <Viewbox
                 Grid.Column="0"
-                Width="16"
-                Height="16"
+                Width="32"
+                Height="32"
                 Margin="4,2,8,0"
-                VerticalAlignment="Top"
+                VerticalAlignment="Center"
                 IsHitTestVisible="False">
-                <Rectangle Width="16" Height="16" />
+                <Image Source="pack://application:,,,/Resources/icon.png" Stretch="Uniform" />
+
             </Viewbox>
             <Menu Grid.Column="1" Margin="0,2,0,0">
                 <MenuItem Header="File">

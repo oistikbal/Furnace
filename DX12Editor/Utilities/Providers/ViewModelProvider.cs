@@ -1,7 +1,7 @@
 ﻿using DX12Editor.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DX12Editor.Providers
+namespace DX12Editor.Utilities.Providers
 {
     public class ViewModelProvider
     {

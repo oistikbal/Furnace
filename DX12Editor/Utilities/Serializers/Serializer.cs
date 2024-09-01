@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace DX12Editor.Serializers
+namespace DX12Editor.Utilities.Serializers
 {
     internal static class Serializer
     {
@@ -45,7 +45,7 @@ namespace DX12Editor.Serializers
             catch (Exception e)
             {
                 Debug.WriteLine(e);
-                return default(T);
+                return default;
             }
         }
     }

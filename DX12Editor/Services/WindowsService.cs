@@ -7,7 +7,7 @@ using AvalonDock;
 using AvalonDock.Layout;
 using AvalonDock.Layout.Serialization;
 using DX12Editor.Attributes;
-using DX12Editor.Providers;
+using DX12Editor.Utilities.Providers;
 using DX12Editor.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 

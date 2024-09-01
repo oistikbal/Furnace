@@ -7,6 +7,7 @@ using System.Reactive.Subjects;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using DX12Editor.Models;
+using DX12Editor.Utilities.Serializers;
 using DX12Editor.Views.Project;
 using ReactiveUI;
 
@@ -74,7 +75,7 @@ namespace DX12Editor.ViewModels
         public ReactiveCommand<Unit, Unit> ProjectLocationButton { get; }
         public ReactiveCommand<Unit, Unit> ProjectCreateNextButton { get; }
 
-        public event Action<string> ProjectOpen;
+        public event Action<string>? ProjectOpen;
 
         public ProjectDialogViewModel()
         {
@@ -89,12 +90,12 @@ namespace DX12Editor.ViewModels
             if (!File.Exists(filePath))
             {
                 RecentProjects = new ObservableCollection<RecentProject>();
-                Serializers.Serializer.ToFile<Models.RecentProjects>(new Models.RecentProjects(), filePath);
+                Serializer.ToFile<Models.RecentProjects>(new Models.RecentProjects(), filePath);
             }
             else
             {
                 // If the file exists, read the data from the file
-                RecentProjects = Serializers.Serializer.FromFile<ObservableCollection<RecentProject>>(filePath);
+                RecentProjects = Serializer.FromFile<ObservableCollection<RecentProject>>(filePath);
             }
 
             _createProject = new();
@@ -243,7 +244,7 @@ namespace DX12Editor.ViewModels
         private void SaveRecentProjects()
         {
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecentProjects.xml");
-            Serializers.Serializer.ToFile(RecentProjects, filePath);
+            Serializer.ToFile(RecentProjects, filePath);
         }
 
         private void OnProjectSelected(RecentProject project)

@@ -19,10 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\.gitignore" />
     <None Remove="Resources\Layouts\Default.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\.gitignore" />
     <EmbeddedResource Include="Resources\Layouts\Default.xml" />
   </ItemGroup>
 
