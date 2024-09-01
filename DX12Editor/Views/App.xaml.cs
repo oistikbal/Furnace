@@ -67,6 +67,8 @@ namespace DX12Editor.Views
             {
                 return new SceneService(path);
             });
+
+            services.AddSingleton<UndoService>();
         }
 
         private void RegisterWindowsWithAttribute(IServiceCollection services, Assembly assembly)

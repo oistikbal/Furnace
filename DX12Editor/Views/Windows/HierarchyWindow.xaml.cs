@@ -4,10 +4,10 @@ using DX12Editor.ViewModels.Windows;
 
 namespace DX12Editor.Views.Windows
 {
-    [Window("Entities", typeof(EntitiesWindowViewModel))]
-    public partial class EntitiesWindow : UserControl
+    [Window("Hierarchy", typeof(HierarchyWindowViewModel))]
+    public partial class HierarchyWindow : UserControl
     {
-        public EntitiesWindow()
+        public HierarchyWindow()
         {
             InitializeComponent();
         }

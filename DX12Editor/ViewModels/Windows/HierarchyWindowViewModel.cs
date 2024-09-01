@@ -13,11 +13,11 @@ namespace DX12Editor.ViewModels.Windows
         public string Name { get; set; }
     }
 
-    public class EntitiesWindowViewModel : ViewModelBase
+    public class HierarchyWindowViewModel : ViewModelBase
     {
         public ObservableCollection<Scene> Scenes { get; set; }
 
-        public EntitiesWindowViewModel()
+        public HierarchyWindowViewModel()
         {
             Scenes = new ObservableCollection<Scene>
             {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Reactive;
 using System.Reflection;
-using AvalonDock;
 using DX12Editor.Attributes;
 using DX12Editor.Models;
 using DX12Editor.Services;
@@ -32,12 +32,19 @@ namespace DX12Editor.ViewModels
 
         public ObservableCollection<WindowItem> WindowItems { get; private set; }
         public ObservableCollection<LayoutResource> Layouts { get; private set; }
+
+        #region Commands
         public ReactiveCommand<WindowItem, Unit> OpenWindowCommand { get; private set; }
         public ReactiveCommand<LayoutResource, Unit> SelectLayoutCommand { get; private set; }
         public ReactiveCommand<Unit, Unit> SaveLayout { get; private set; }
+        public ReactiveCommand<Unit, Unit> SaveCommand { get; private set; }
+        public ReactiveCommand<Unit, Unit> UndoCommand { get; private set; }
+        #endregion
 
+        #region Properties
         public string SceneName { get => _sceneName; set => this.RaiseAndSetIfChanged(ref _sceneName, value); }
         public string ProjectName { get => _projectName; set => this.RaiseAndSetIfChanged(ref _projectName, value); }
+        #endregion
 
         public EditorWindowViewModel(WindowsService windowsService, ProjectService projectService)
         {
@@ -45,15 +52,19 @@ namespace DX12Editor.ViewModels
             WindowItems = new();
             Layouts = new();
             _windowsService = windowsService;
+
             OpenWindowCommand = ReactiveCommand.Create<WindowItem>(item => OpenWindow(item));
             SelectLayoutCommand = ReactiveCommand.Create<LayoutResource>(item => SelectLayout(item));
             SaveLayout = ReactiveCommand.Create(_windowsService.Save);
+            SaveCommand = ReactiveCommand.Create(() => { });
+            UndoCommand = ReactiveCommand.Create(() => { });
+
             _windowsService.LoadLayout($"{_layoutsPrefix}Default.xml");
             LoadWindowItems();
             LoadAllLayoutResourceNames(_layoutsPrefix);
 
 
-            MessageBus.Current.Listen<Project>().Subscribe(project => 
+            MessageBus.Current.Listen<Project>().Subscribe(project =>
             {
                 ProjectName = project.Name;
             });
