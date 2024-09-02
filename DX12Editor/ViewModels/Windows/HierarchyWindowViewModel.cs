@@ -1,49 +1,67 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Reactive;
+using System.Reflection.Metadata;
+using System.Windows;
+using System.Windows.Controls;
+using DX12Editor.ViewModels;
+using DX12Editor.ViewModels.Components;
+using ReactiveUI;
 
 namespace DX12Editor.ViewModels.Windows
 {
-    public class Scene
-    {
-        public string SceneName { get; set; }
-        public ObservableCollection<Entity> Entities { get; set; }
-    }
-
-    public class Entity
-    {
-        public string Name { get; set; }
-    }
-
     public class HierarchyWindowViewModel : ViewModelBase
     {
-        public ObservableCollection<Scene> Scenes { get; set; }
 
-        public HierarchyWindowViewModel()
+        private object _selectedEntity;
+
+        public object SelectedEntity
         {
-            Scenes = new ObservableCollection<Scene>
+            get => _selectedEntity;
+            set
             {
-                new Scene
-                {
-                    SceneName = "Scene 1",
-                    Entities = new ObservableCollection<Entity>
-                    {
-                        new Entity { Name = "Entity 1" },
-                        new Entity { Name = "Entity 2" }
-                    }
-                },
-                new Scene
-                {
-                    SceneName = "Scene 2",
-                    Entities = new ObservableCollection<Entity>
-                    {
-                        new Entity { Name = "Entity 3" }
-                    }
-                },
-                new Scene
-                {
-                    SceneName = "Scene 3",
-                    Entities = new ObservableCollection<Entity>()
-                }
-            };
+                Debug.WriteLine("selection");
+                this.RaiseAndSetIfChanged(ref _selectedEntity, value);
+            }
+        }
+
+        private readonly ObservableCollection<Entity> _entities = new();
+        public ReadOnlyObservableCollection<Entity> Entities { get; private set; }
+
+        #region Commands
+        public ReactiveCommand<Unit, Unit> AddEntityCommand { get; private set; }
+        public ReactiveCommand<Entity, Unit> RemoveEntityCommand { get; private set; }
+        public ReactiveCommand<object, Unit> RightClickCommand { get; private set; }
+        public ReactiveCommand<Entity, Unit> SelectedItemCommand { get; private set; }
+        #endregion
+
+        public HierarchyWindowViewModel() 
+        {
+            AddEntityCommand = ReactiveCommand.Create(AddEntity);
+            RightClickCommand = ReactiveCommand.Create<object>(obj => RightClick(obj));
+            RemoveEntityCommand = ReactiveCommand.Create<Entity>(entity=> RemoveEntity(entity));
+            SelectedItemCommand = ReactiveCommand.Create<Entity>(entity=> MessageBus.Current.SendMessage<Entity>(entity, "SelectedEntity"));
+            Entities = new(_entities);
+        }
+
+        private void AddEntity()
+        {
+            _entities.Add(new Entity());
+        }
+
+        private void RightClick(object stackPanel)
+        {
+            
+            if (stackPanel is StackPanel)
+            {
+                var contextMenu = ((StackPanel)stackPanel).ContextMenu;
+                contextMenu.DataContext = this;
+            }
+        }
+
+        private void RemoveEntity(Entity entity) 
+        {
+            _entities.Remove(entity);
         }
     }
 }
