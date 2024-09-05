@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using System.Windows.Controls;
+using DX12Editor.Attributes;
 using DX12Editor.ViewModels.Components;
-using DX12Editor.Views.Inspector;
 using ReactiveUI;
 
 namespace DX12Editor.ViewModels.Windows
 {
     public class InspectorWindowViewModel : ViewModelBase
     {
+        private readonly Dictionary<Type, UserControl> _views = new();
         private UserControl _content;
-        private UserControl _entityView;
 
         public UserControl Content
         {
@@ -22,11 +18,39 @@ namespace DX12Editor.ViewModels.Windows
         }
 
 
-        public InspectorWindowViewModel() 
+        public InspectorWindowViewModel()
         {
-            _entityView = new EntityView();
-            Content = _entityView;
-            MessageBus.Current.Listen<Entity>("SelectedEntity").Subscribe(e => {_entityView.DataContext = e; });
+            RegisterViews();
+            MessageBus.Current.Listen<Entity>("SelectedEntity").Subscribe(e =>
+            {
+                if (e is not null)
+                {
+                    Content = _views[e.GetType()];
+                    _views[e.GetType()].DataContext = e;
+                }
+                else
+                {
+                    Content = null;
+                }
+            });
+        }
+
+        private void RegisterViews()
+        {
+            var views = Assembly.GetCallingAssembly().GetTypes()
+                        .Where(t => t.GetCustomAttributes(typeof(InspectorAttribute<>)).Any());
+
+            foreach (var view in views)
+            {
+                var attribute = view.GetCustomAttributes(false)
+                                    .FirstOrDefault(a => a.GetType().IsGenericType &&
+                                                         a.GetType().GetGenericTypeDefinition() == typeof(InspectorAttribute<>));
+
+                var viewType = ((dynamic)attribute).ContentType;
+
+                var viewInstance = Activator.CreateInstance(viewType) as UserControl;
+                _views[view] = viewInstance;
+            }
         }
 
     }

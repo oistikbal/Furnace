@@ -2,6 +2,7 @@
     x:Class="DX12Editor.Views.Windows.HierarchyWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:DX12Editor.Utilities.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:DX12Editor.Views.Windows"
@@ -30,17 +31,24 @@
             <TreeView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
+                        <StackPanel.Resources>
+                            <c:HierarchyEntityRightClickConverter x:Key="HierarchyEntityRightClickConverter" />
+                        </StackPanel.Resources>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="PreviewMouseRightButtonUp">
-                                <i:InvokeCommandAction Command="{Binding DataContext.RightClickCommand, RelativeSource={RelativeSource AncestorType=TreeView}}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=StackPanel}}" />
+                                <i:InvokeCommandAction Command="{Binding DataContext.RightClickEntityCommand, RelativeSource={RelativeSource AncestorType=TreeView}}">
+                                    <i:InvokeCommandAction.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource HierarchyEntityRightClickConverter}">
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource AncestorType=StackPanel}" />
+                                        </MultiBinding>
+                                    </i:InvokeCommandAction.CommandParameter>
+                                </i:InvokeCommandAction>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <StackPanel.ContextMenu>
                             <ContextMenu>
-                                <MenuItem
-                                    Command="{Binding RemoveEntityCommand}"
-                                    CommandParameter="{Binding}"
-                                    Header="Remove Entity" />
+                                <MenuItem Command="{Binding RemoveEntityCommand}" Header="Remove Entity" />
                             </ContextMenu>
                         </StackPanel.ContextMenu>
                         <TextBlock Text="{Binding Name}" />

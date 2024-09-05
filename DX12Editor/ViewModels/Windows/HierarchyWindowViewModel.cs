@@ -1,10 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reactive;
-using System.Reflection.Metadata;
-using System.Windows;
 using System.Windows.Controls;
-using DX12Editor.ViewModels;
 using DX12Editor.ViewModels.Components;
 using ReactiveUI;
 
@@ -12,35 +9,24 @@ namespace DX12Editor.ViewModels.Windows
 {
     public class HierarchyWindowViewModel : ViewModelBase
     {
-
-        private object _selectedEntity;
-
-        public object SelectedEntity
-        {
-            get => _selectedEntity;
-            set
-            {
-                Debug.WriteLine("selection");
-                this.RaiseAndSetIfChanged(ref _selectedEntity, value);
-            }
-        }
-
         private readonly ObservableCollection<Entity> _entities = new();
         public ReadOnlyObservableCollection<Entity> Entities { get; private set; }
 
         #region Commands
         public ReactiveCommand<Unit, Unit> AddEntityCommand { get; private set; }
-        public ReactiveCommand<Entity, Unit> RemoveEntityCommand { get; private set; }
-        public ReactiveCommand<object, Unit> RightClickCommand { get; private set; }
+        public ReactiveCommand<Unit, Unit> RemoveEntityCommand { get; private set; }
+        public ReactiveCommand<(Entity, StackPanel), Unit> RightClickEntityCommand { get; private set; }
         public ReactiveCommand<Entity, Unit> SelectedItemCommand { get; private set; }
         #endregion
 
-        public HierarchyWindowViewModel() 
+        private Entity? _rightClickEntity;
+
+        public HierarchyWindowViewModel()
         {
             AddEntityCommand = ReactiveCommand.Create(AddEntity);
-            RightClickCommand = ReactiveCommand.Create<object>(obj => RightClick(obj));
-            RemoveEntityCommand = ReactiveCommand.Create<Entity>(entity=> RemoveEntity(entity));
-            SelectedItemCommand = ReactiveCommand.Create<Entity>(entity=> MessageBus.Current.SendMessage<Entity>(entity, "SelectedEntity"));
+            RightClickEntityCommand = ReactiveCommand.Create<(Entity, StackPanel)>(o => RightClickEntity(o.Item1, o.Item2));
+            RemoveEntityCommand = ReactiveCommand.Create(RemoveEntity);
+            SelectedItemCommand = ReactiveCommand.Create<Entity>(entity => MessageBus.Current.SendMessage<Entity>(entity, "SelectedEntity"));
             Entities = new(_entities);
         }
 
@@ -49,19 +35,20 @@ namespace DX12Editor.ViewModels.Windows
             _entities.Add(new Entity());
         }
 
-        private void RightClick(object stackPanel)
+        private void RightClickEntity(Entity entity, StackPanel stackPanel)
         {
-            
-            if (stackPanel is StackPanel)
-            {
-                var contextMenu = ((StackPanel)stackPanel).ContextMenu;
-                contextMenu.DataContext = this;
-            }
+            Debug.WriteLine(entity.Name);
+            var contextMenu = ((StackPanel)stackPanel).ContextMenu.DataContext = this;
+            _rightClickEntity = entity;
         }
 
-        private void RemoveEntity(Entity entity) 
+        private void RemoveEntity()
         {
-            _entities.Remove(entity);
+            Debug.Assert(_rightClickEntity is not null);
+            if (_rightClickEntity is not null)
+            {
+                _entities.Remove(_rightClickEntity);
+            }
         }
     }
 }
