@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using Microsoft.Extensions.Logging;
@@ -74,21 +73,18 @@ namespace DX12Editor.Utilities.Loggers
     public class LogMessage
     {
         public DateTime Time { get; }
-        public LogType MessageType { get; }
+        public LogType LogType { get; }
         public string Message { get; }
-        public string File { get; }
-        public string Caller { get; }
-        public int Line { get; }
-        public string MetaData => $"{File}: {Caller} ({Line})";
+        public string CallStack { get; }
+        public string LastFrame { get; }
 
-        public LogMessage(LogType type, string msg, string file, string caller, int line)
+        public LogMessage(LogType type, string msg, string callStack, string lastFrame)
         {
             Time = DateTime.Now;
-            MessageType = type;
+            LogType = type;
             Message = msg;
-            File = System.IO.Path.GetFileName(file);
-            Caller = caller;
-            Line = line;
+            CallStack = callStack;
+            LastFrame = lastFrame;
         }
     }
 
@@ -97,7 +93,6 @@ namespace DX12Editor.Utilities.Loggers
     {
         private readonly ObservableCollection<LogMessage> _logs = new();
         private readonly string _category;
-        public int _messageFilter = (int)(LogType.Info | LogType.Warn | LogType.Error);
 
         public EditorLogger(string category, ObservableCollection<LogMessage> logs)
         {
@@ -115,25 +110,50 @@ namespace DX12Editor.Utilities.Loggers
             var type = ConvertLogLevelToMessageType(logLevel);
             var message = formatter(state, exception);
 
-            // Capture caller information
-            var callerFilePath = "";
-            var callerMemberName = "";
-            var callerLineNumber = 0;
+            StackTrace stackTrace = new StackTrace(true);
 
-            // Use caller information if available
-            if (formatter.Method.GetCustomAttributes(typeof(CallerFilePathAttribute), false).Length > 0)
-                callerFilePath = formatter.Method.GetCustomAttributes(typeof(CallerFilePathAttribute), false)[0].ToString();
-            if (formatter.Method.GetCustomAttributes(typeof(CallerMemberNameAttribute), false).Length > 0)
-                callerMemberName = formatter.Method.GetCustomAttributes(typeof(CallerMemberNameAttribute), false)[0].ToString();
-            if (formatter.Method.GetCustomAttributes(typeof(CallerLineNumberAttribute), false).Length > 0)
-                callerLineNumber = (int)formatter.Method.GetCustomAttributes(typeof(CallerLineNumberAttribute), false)[0];
+            var frames = stackTrace.GetFrames()
+                .Where(frame =>
+                {
+                    var method = frame.GetMethod();
+                    var declaringType = method.DeclaringType;
+
+                    // Skip frames until we find the first non-Logger method
+                    if (declaringType == typeof(EditorLogger) || declaringType.Namespace.StartsWith("Microsoft.Extensions.Logging") || frame.GetFileLineNumber() == 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                })
+                .Select(frame =>
+                {
+                    var method = frame.GetMethod();
+                    var declaringType = method.DeclaringType;
+                    var fileName = frame.GetFileName();
+                    var lineNumber = frame.GetFileLineNumber();
+
+                    return new
+                    {
+                        Frame = frame,
+                        Details = $"{declaringType}.{method.Name} at ({fileName}:{lineNumber})"
+                    };
+                })
+                .ToList();
+
+            string callstack = string.Join("\n", frames.Select(f => f.Details));
+
+            // Get the last frame details if available
+            var lastFrame = frames.First();
 
             // Update log collection on the UI thread
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (IsEnabled(logLevel))
                 {
-                    _logs.Add(new LogMessage(type, $"[{_category}]: {message}", callerFilePath, callerMemberName, callerLineNumber));
+                    _logs.Add(new LogMessage(type, $"[{_category}]: {message}", callstack, lastFrame.Details));
                 }
             }));
         }
@@ -151,8 +171,49 @@ namespace DX12Editor.Utilities.Loggers
 
         private void TraceCallback(string message)
         {
-            _logs.Add(new LogMessage(LogType.Info, message, "", "", 0));
+            StackTrace stackTrace = new StackTrace(true);
 
+            var frames = stackTrace.GetFrames()
+                .Where(frame =>
+                {
+                    var method = frame.GetMethod();
+                    var declaringType = method.DeclaringType;
+
+                    // Skip frames until we find the first non-Logger method
+                    if (declaringType == typeof(EditorLogger) || declaringType.Namespace.StartsWith("Microsoft.Extensions.Logging") || frame.GetFileLineNumber() == 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                })
+                .Select(frame =>
+                {
+                    var method = frame.GetMethod();
+                    var declaringType = method.DeclaringType;
+                    var fileName = frame.GetFileName();
+                    var lineNumber = frame.GetFileLineNumber();
+
+                    return new
+                    {
+                        Frame = frame,
+                        Details = $"{declaringType}.{method.Name} at ({fileName}:{lineNumber})"
+                    };
+                })
+                .ToList();
+
+            string callstack = string.Join("\n", frames.Select(f => f.Details));
+
+            // Get the last frame details if available
+            var lastFrame = frames.First();
+
+
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                _logs.Add(new LogMessage(LogType.Info, message, callstack, lastFrame.Details));
+            }));
         }
     }
 }
