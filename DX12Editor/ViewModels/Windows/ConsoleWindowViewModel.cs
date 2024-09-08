@@ -27,8 +27,8 @@ namespace DX12Editor.ViewModels.Windows
         public ReactiveCommand<Unit, Unit> ToggleInfoCommand { get; }
         public ReactiveCommand<Unit, Unit> ToggleWarnCommand { get; }
         public ReactiveCommand<Unit, Unit> ToggleErrorCommand { get; }
-
         public ReactiveCommand<LogMessage, Unit> SelectedLogCommand { get; private set; }
+        public ReactiveCommand<Unit, Unit> ClearCommand { get; private set; }
         #endregion
 
         #region Properties
@@ -50,7 +50,7 @@ namespace DX12Editor.ViewModels.Windows
             set
             {
                 this.RaiseAndSetIfChanged(ref _filterText, value);
-                UpdateFilter();
+                FilteredLogs.Refresh();
             }
         }
 
@@ -94,21 +94,12 @@ namespace DX12Editor.ViewModels.Windows
         // TO-DO: Update Filter and Toggle Buttons
         public ConsoleWindowViewModel(ILogger<ConsoleWindowViewModel> logger, IObservableLoggerProvider loggerProvider)
         {
-            ToggleInfoCommand = ReactiveCommand.Create(() =>
-            {
-                IsInfoChecked = !IsInfoChecked;
-            });
-            ToggleWarnCommand = ReactiveCommand.Create(() => {
-                IsWarnChecked = !IsWarnChecked;
-            });
-            ToggleErrorCommand = ReactiveCommand.Create(() =>             {
-                IsErrorChecked = !IsErrorChecked;
-            });
-
+            _logger = logger;
             FilteredLogs = CollectionViewSource.GetDefaultView(loggerProvider.Logs);
             SelectedLogCommand = ReactiveCommand.Create<LogMessage>(log => { SelectedLog = log; });
+            ClearCommand = ReactiveCommand.Create(loggerProvider.Logs.Clear);
 
-            IsInfoChecked = true;
+            IsInfoChecked = true; 
             IsWarnChecked = true; 
             IsErrorChecked = true;
         }
@@ -136,6 +127,7 @@ namespace DX12Editor.ViewModels.Windows
 
                 return isMessageTypeMatch && isTextMatch;
             };
+            _logger.LogInformation("updatefilter");
         }
     }
 }

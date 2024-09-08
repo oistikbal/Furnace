@@ -119,7 +119,7 @@ namespace DX12Editor.Utilities.Loggers
                     var declaringType = method.DeclaringType;
 
                     // Skip frames until we find the first non-Logger method
-                    if (declaringType == typeof(EditorLogger) || declaringType.Namespace.StartsWith("Microsoft.Extensions.Logging") || frame.GetFileLineNumber() == 0)
+                    if (declaringType == null || declaringType == typeof(EditorLogger) || declaringType.Namespace.StartsWith("Microsoft.Extensions.Logging") || frame.GetFileLineNumber() == 0)
                     {
                         return false;
                     }
@@ -138,7 +138,7 @@ namespace DX12Editor.Utilities.Loggers
                     return new
                     {
                         Frame = frame,
-                        Details = $"{declaringType}.{method.Name} at ({fileName}:{lineNumber})"
+                        Details = $"{declaringType}.{method.Name} @ ({fileName}:{lineNumber})"
                     };
                 })
                 .ToList();
@@ -199,7 +199,7 @@ namespace DX12Editor.Utilities.Loggers
                     return new
                     {
                         Frame = frame,
-                        Details = $"{declaringType}.{method.Name} at ({fileName}:{lineNumber})"
+                        Details = $"{declaringType}.{method.Name} @ ({fileName}:{lineNumber})"
                     };
                 })
                 .ToList();

@@ -12,6 +12,16 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style BasedOn="{StaticResource ButtonBaseStyle}" TargetType="ToggleButton">
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource EnvironmentMainWindowActiveDefaultBorder}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,6 +29,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="4,6">
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -30,13 +41,14 @@
                 Grid.Column="0"
                 Margin="0,0,10,0"
                 Padding="5,3,5,3"
+                Command="{Binding ClearCommand}"
                 Content="Clear" />
-            <Button
+            <ToggleButton
                 Grid.Column="1"
                 Margin="0,0,10,0"
                 Padding="5,3,5,3"
                 Content="Collapse" />
-            <Button
+            <ToggleButton
                 Grid.Column="2"
                 Margin="0,0,10,0"
                 Padding="5,3,5,3"
@@ -46,8 +58,7 @@
                 Grid.Column="3"
                 Margin="0,0,10,0"
                 Padding="5,3,5,3"
-                Text="{Binding FilterText, Mode=TwoWay}" />
-
+                Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <StackPanel
                 Grid.Column="4"
@@ -59,7 +70,6 @@
                     Margin="0,0,10,0"
                     Padding="5,3,5,3"
                     HorizontalAlignment="Right"
-                    Command="{Binding ToggleInfoCommand}"
                     Content="Info"
                     IsChecked="{Binding IsInfoChecked, Mode=TwoWay}"
                     ToolTip="Toggle Information Messages" />
@@ -68,7 +78,6 @@
                     Margin="0,0,10,0"
                     Padding="5,3,5,3"
                     HorizontalAlignment="Right"
-                    Command="{Binding ToggleWarnCommand}"
                     Content="Warn"
                     IsChecked="{Binding IsWarnChecked, Mode=TwoWay}"
                     ToolTip="Toggle Warn Messages" />
@@ -77,7 +86,6 @@
                     Margin="0,0,10,0"
                     Padding="5,3,5,3"
                     HorizontalAlignment="Right"
-                    Command="{Binding ToggleErrorCommand}"
                     Content="Error"
                     IsChecked="{Binding IsErrorChecked, Mode=TwoWay}" />
             </StackPanel>
@@ -111,10 +119,17 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0">
+                            <ContentControl
+                                Grid.Column="0"
+                                Margin="5,0,5,0"
+                                Content="{DynamicResource BreakpointError}" />
+
+
+                            <Grid Grid.Column="1">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
