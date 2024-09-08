@@ -12,49 +12,63 @@
     Height="Auto"
     mc:Ignorable="d">
 
-    <Grid>
-        <TreeView
-            x:Name="hierarchyTreeView"
-            Grid.Column="0"
-            Margin="5"
-            ItemsSource="{Binding Entities}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectedItemChanged">
-                    <i:InvokeCommandAction Command="{Binding SelectedItemCommand}" CommandParameter="{Binding ElementName=hierarchyTreeView, Path=SelectedItem}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <TreeView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="{Binding AddEntityCommand}" Header="Add Entity" />
-                </ContextMenu>
-            </TreeView.ContextMenu>
-            <TreeView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <StackPanel.Resources>
-                            <c:HierarchyEntityRightClickConverter x:Key="HierarchyEntityRightClickConverter" />
-                        </StackPanel.Resources>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="PreviewMouseRightButtonUp">
-                                <i:InvokeCommandAction Command="{Binding DataContext.RightClickEntityCommand, RelativeSource={RelativeSource AncestorType=TreeView}}">
-                                    <i:InvokeCommandAction.CommandParameter>
-                                        <MultiBinding Converter="{StaticResource HierarchyEntityRightClickConverter}">
-                                            <Binding />
-                                            <Binding RelativeSource="{RelativeSource AncestorType=StackPanel}" />
-                                        </MultiBinding>
-                                    </i:InvokeCommandAction.CommandParameter>
-                                </i:InvokeCommandAction>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <StackPanel.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding RemoveEntityCommand}" Header="Remove Entity" />
-                            </ContextMenu>
-                        </StackPanel.ContextMenu>
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
-                </DataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
-    </Grid>
+    <TreeView
+        x:Name="hierarchyTreeView"
+        Margin="5"
+        ItemsSource="{Binding Entities}"
+        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="SelectedItemChanged">
+                <i:InvokeCommandAction Command="{Binding SelectedItemCommand}" CommandParameter="{Binding ElementName=hierarchyTreeView, Path=SelectedItem}" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <TreeView.ContextMenu>
+            <ContextMenu>
+                <MenuItem Command="{Binding AddEntityCommand}" Header="Add Entity" />
+            </ContextMenu>
+        </TreeView.ContextMenu>
+        <TreeView.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <c:HierarchyEntityRightClickConverter x:Key="HierarchyEntityRightClickConverter" />
+                    </StackPanel.Resources>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseRightButtonUp">
+                            <i:InvokeCommandAction Command="{Binding DataContext.RightClickEntityCommand, RelativeSource={RelativeSource AncestorType=TreeView}}">
+                                <i:InvokeCommandAction.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource HierarchyEntityRightClickConverter}">
+                                        <Binding />
+                                        <Binding RelativeSource="{RelativeSource AncestorType=StackPanel}" />
+                                    </MultiBinding>
+                                </i:InvokeCommandAction.CommandParameter>
+                            </i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <StackPanel.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding RemoveEntityCommand}" Header="Remove Entity" />
+                        </ContextMenu>
+                    </StackPanel.ContextMenu>
+                    <TextBlock
+                        Text="{Binding Name}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="NoWrap">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                                        <Setter Property="Foreground" Value="{DynamicResource SystemColorsControlDarkDark}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsEnabled}" Value="True">
+                                        <Setter Property="Foreground" Value="{DynamicResource SystemColorsWindowText}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </DataTemplate>
+        </TreeView.ItemTemplate>
+    </TreeView>
 </UserControl>

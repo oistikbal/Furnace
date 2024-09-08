@@ -9,7 +9,27 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <StackPanel>
-        <TextBlock Text="{Binding Name}" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <CheckBox
+                Grid.Column="0"
+                Margin="5"
+                IsChecked="{Binding IsEnabled}" />
+            <TextBox
+                Grid.Column="1"
+                Margin="5"
+                Text="{Binding Name}">
+                <TextBox.Style>
+                    <Style BasedOn="{StaticResource TextBoxBaseStyle}" TargetType="TextBox">
+                        <EventSetter Event="KeyDown" Handler="TextBox_KeyDown" />
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+
+        </Grid>
         <ItemsControl ItemsSource="{Binding Components}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -17,5 +37,11 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
+        <Button
+            Margin="5"
+            Padding="80,4,80,4"
+            HorizontalAlignment="Center"
+            HorizontalContentAlignment="Center"
+            Content="Add Component" />
     </StackPanel>
 </UserControl>

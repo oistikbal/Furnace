@@ -1,11 +1,15 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Windows;
 using DX12Editor.Attributes;
 using DX12Editor.Services;
+using DX12Editor.Utilities;
+using DX12Editor.Utilities.Loggers;
 using DX12Editor.Utilities.Providers;
 using DX12Editor.ViewModels;
 using DX12Editor.ViewModels.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace DX12Editor.Views
@@ -32,8 +36,6 @@ namespace DX12Editor.Views
             ConfigureServices(services, projectPath);
             _serviceProvider = services.BuildServiceProvider();
 
-            _serviceProvider.GetRequiredService<ConsoleWindowViewModel>();
-
             var editorWindow = _serviceProvider.GetRequiredService<EditorWindow>();
             editorWindow.DataContext = _serviceProvider.GetRequiredService<EditorWindowViewModel>();
             editorWindow.Show();
@@ -45,11 +47,19 @@ namespace DX12Editor.Views
         {
             RegisterWindowsWithAttribute(services, Assembly.GetExecutingAssembly());
 
+            var loggerProvider = new LoggerProvider();
             services.AddSingleton<EditorWindow>();
+            services.AddSingleton<IObservableLoggerProvider>(loggerProvider);
 
+            services.AddLogging(configure =>
+            {
+                configure.AddProvider(loggerProvider);
+                configure.SetMinimumLevel(LogLevel.Information);
+            });
             services.AddSingleton<EditorWindowViewModel>(provider =>
             {
-                return new EditorWindowViewModel(provider.GetRequiredService<WindowsService>(), provider.GetRequiredService<ProjectService>());
+                return new EditorWindowViewModel(provider.GetRequiredService<WindowsService>(), 
+                    provider.GetRequiredService<ProjectService>(), provider.GetRequiredService<ILogger<EditorWindowViewModel>>());
             });
 
             services.AddSingleton<WindowsService>(provider =>
@@ -59,7 +69,7 @@ namespace DX12Editor.Views
 
             services.AddSingleton<ProjectService>(provider =>
             {
-                return new ProjectService(projectPath, MessageBus.Current);
+                return new ProjectService(projectPath, MessageBus.Current, provider.GetRequiredService<ILogger<ProjectService>>());
             });
 
             services.AddSingleton<SceneService>(provider =>

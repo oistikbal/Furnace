@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Shapes;
 using DX12Editor.Models;
 using DX12Editor.Utilities.Serializers;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace DX12Editor.Services
@@ -15,19 +16,22 @@ namespace DX12Editor.Services
     public class ProjectService
     {
         private readonly IMessageBus _messageBus;
+        private readonly ILogger _logger;
         private Project _project;
 
-        public ProjectService(string path, IMessageBus messageBus) 
+        public ProjectService(string path, IMessageBus messageBus, ILogger<ProjectService> logger) 
         {
             Debug.Assert(path != null, "Path cannot be null");
             Debug.Assert(messageBus != null, "MessageBus Cannot be null");
 
             _messageBus = messageBus;
+            _logger = logger;
             _project = Serializer.FromFile<Project>(path);
             _project.Path = System.IO.Path.GetDirectoryName(path);
             InitializeProjectStructure();
 
             _messageBus.SendMessage(_project, "ProjectLoaded");
+            _logger.LogInformation($"Project loaded at path {path}");
         }
 
         public Project GetProject()

@@ -24,5 +24,34 @@ namespace DX12Editor.Views.Inspector
         {
             InitializeComponent();
         }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                TextBox textBox = sender as TextBox;
+                if (textBox != null)
+                {
+                    BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
+                    if (binding != null)
+                    {
+                        binding.UpdateSource();
+                    }
+                }
+            }
+            else if (e.Key == Key.Escape)
+            {
+                TextBox textBox = sender as TextBox;
+                if (textBox != null)
+                {
+                    BindingExpression binding = textBox.GetBindingExpression(TextBox.TextProperty);
+                    if (binding != null)
+                    {
+                        binding.UpdateTarget();
+                    }
+                    Keyboard.ClearFocus();
+                }
+            }
+        }
     }
 }

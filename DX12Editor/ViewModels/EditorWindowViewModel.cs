@@ -6,6 +6,7 @@ using DX12Editor.Attributes;
 using DX12Editor.Models;
 using DX12Editor.Services;
 using DynamicData;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
 namespace DX12Editor.ViewModels
@@ -46,7 +47,7 @@ namespace DX12Editor.ViewModels
         public string ProjectName { get => _projectName; set => this.RaiseAndSetIfChanged(ref _projectName, value); }
         #endregion
 
-        public EditorWindowViewModel(WindowsService windowsService, ProjectService projectService)
+        public EditorWindowViewModel(WindowsService windowsService, ProjectService projectService, ILogger<EditorWindowViewModel> logger)
         {
             _layoutsPrefix = $"{Assembly.GetExecutingAssembly().GetName().Name}.Resources.Layouts.";
             WindowItems = new();

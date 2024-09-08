@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using ReactiveUI;
 
 namespace DX12Editor.ViewModels.Components
 {
+    [DataContract]
     public class Transform : Component
     {
         private Vector3 _position;
