@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using FurnaceEditor.Views;
+﻿using FurnaceEditor.Views;
 
 namespace FurnaceEditor
 {

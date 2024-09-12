@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
 using FurnaceEditor.Models;
 using FurnaceEditor.Utilities.Serializers;
 using Microsoft.Extensions.Logging;
@@ -19,7 +13,7 @@ namespace FurnaceEditor.Services
         private readonly ILogger _logger;
         private Project _project;
 
-        public ProjectService(string path, IMessageBus messageBus, ILogger<ProjectService> logger) 
+        public ProjectService(string path, IMessageBus messageBus, ILogger<ProjectService> logger)
         {
             Debug.Assert(path != null, "Path cannot be null");
             Debug.Assert(messageBus != null, "MessageBus Cannot be null");

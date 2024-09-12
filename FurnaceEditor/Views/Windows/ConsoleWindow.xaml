@@ -2,8 +2,10 @@
     x:Class="FurnaceEditor.Views.Windows.ConsoleWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:FurnaceEditor.Utilities.Converters.Console"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:l="clr-namespace:FurnaceEditor.Utilities.Loggers"
     xmlns:local="clr-namespace:FurnaceEditor.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="Console"
@@ -21,6 +23,98 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+
+        <DataTemplate x:Key="InfoLogTemplate" DataType="{x:Type l:LogMessage}">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Viewbox
+                    Grid.Column="0"
+                    Width="24"
+                    Height="24"
+                    Margin="5,0,5,0">
+                    <StaticResource ResourceKey="StatusInformation" />
+                </Viewbox>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Text="{Binding Time, StringFormat=[hh:mm:ss]}" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <TextBlock Grid.Row="1" Text="{Binding LastFrame}" />
+                </Grid>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ErrorLogTemplate" DataType="{x:Type l:LogMessage}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Viewbox
+                    Grid.Column="0"
+                    Width="24"
+                    Height="24"
+                    Margin="5,0,5,0">
+                    <StaticResource ResourceKey="StatusInvalid" />
+                </Viewbox>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Text="{Binding Time, StringFormat=[hh:mm:ss]}" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <TextBlock Grid.Row="1" Text="{Binding LastFrame}" />
+                </Grid>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="WarningLogTemplate" DataType="{x:Type l:LogMessage}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Viewbox
+                    Grid.Column="0"
+                    Width="24"
+                    Height="24"
+                    Margin="5,0,5,0">
+                    <StaticResource ResourceKey="StatusWarning" />
+                </Viewbox>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <TextBlock Text="{Binding Time, StringFormat=[hh:mm:ss]}" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <TextBlock Grid.Row="1" Text="{Binding LastFrame}" />
+                </Grid>
+            </Grid>
+        </DataTemplate>
+
+        <c:LogTemplateSelector
+            x:Key="LogTemplateSelector"
+            ErrorLogTemplate="{StaticResource ErrorLogTemplate}"
+            InfoLogTemplate="{StaticResource InfoLogTemplate}"
+            WarningLogTemplate="{StaticResource WarningLogTemplate}" />
+        <c:LogIndexToColorConverter
+            x:Key="LogIndexToColorConverter"
+            EvenColor="#77373535"
+            OddColor="Transparent" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -70,24 +164,37 @@
                     Margin="0,0,10,0"
                     Padding="5,3,5,3"
                     HorizontalAlignment="Right"
-                    Content="Info"
+                    HorizontalContentAlignment="Center"
                     IsChecked="{Binding IsInfoChecked, Mode=TwoWay}"
-                    ToolTip="Toggle Information Messages" />
+                    ToolTip="Toggle Information Messages">
+                    <Viewbox>
+                        <StaticResource ResourceKey="StatusInformation" />
+                    </Viewbox>
+                </ToggleButton>
                 <ToggleButton
                     x:Name="toggleWarn"
                     Margin="0,0,10,0"
                     Padding="5,3,5,3"
                     HorizontalAlignment="Right"
-                    Content="Warn"
+                    HorizontalContentAlignment="Center"
                     IsChecked="{Binding IsWarnChecked, Mode=TwoWay}"
-                    ToolTip="Toggle Warn Messages" />
+                    ToolTip="Toggle Warn Messages">
+                    <Viewbox>
+                        <StaticResource ResourceKey="StatusWarning" />
+                    </Viewbox>
+                </ToggleButton>
+
                 <ToggleButton
                     x:Name="toggleError"
                     Margin="0,0,10,0"
                     Padding="5,3,5,3"
                     HorizontalAlignment="Right"
-                    Content="Error"
-                    IsChecked="{Binding IsErrorChecked, Mode=TwoWay}" />
+                    HorizontalContentAlignment="Center"
+                    IsChecked="{Binding IsErrorChecked, Mode=TwoWay}">
+                    <Viewbox>
+                        <StaticResource ResourceKey="StatusInvalid" />
+                    </Viewbox>
+                </ToggleButton>
             </StackPanel>
         </Grid>
 
@@ -104,41 +211,39 @@
                 FontFamily="Consolas"
                 FontSize="12"
                 Foreground="White"
-                ItemsSource="{Binding FilteredLogs}">
+                ItemTemplateSelector="{StaticResource LogTemplateSelector}"
+                ItemsSource="{Binding FilteredLogs}"
+                ScrollViewer.CanContentScroll="False"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.IsDeferredScrollingEnabled="True"
+                ScrollViewer.VerticalScrollBarVisibility="Auto">
+
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding SelectedLogCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-                <ItemsControl.ItemsPanel>
+
+                <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel />
+                        <VirtualizingStackPanel />
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                </ListBox.ItemsPanel>
 
-
-
-                            <Grid Grid.Column="1">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Time, StringFormat=[hh:mm:ss]}" TextWrapping="Wrap" />
-                                    <TextBlock Text="{Binding Message}" TextWrapping="Wrap" />
-                                </StackPanel>
-                                <TextBlock Grid.Row="1" Text="{Binding LastFrame}" />
-                            </Grid>
-                        </Grid>
-
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource EnvironmentMainWindowButtonHoverActive}" />
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <Binding Converter="{StaticResource LogIndexToColorConverter}" />
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListBox>
 
             <GridSplitter

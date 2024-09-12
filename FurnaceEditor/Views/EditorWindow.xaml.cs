@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using AakStudio.Shell.UI.Controls;
-using FurnaceEditor.ViewModels;
 
 namespace FurnaceEditor.Views
 {

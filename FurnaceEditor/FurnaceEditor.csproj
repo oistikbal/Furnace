@@ -9,6 +9,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <BaseOutputPath>$(SolutionDir)bin\</BaseOutputPath>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <ApplicationIcon>Resources\Icons\FurnaceIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,8 +21,11 @@
 
   <ItemGroup>
     <None Remove="Resources\.gitignore" />
-    <None Remove="Resources\Furnace\FurnaceIcon.png" />
     <None Remove="Resources\Layouts\Default.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\FurnaceIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,10 +43,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.EventSource" Version="8.0.0" />
     <PackageReference Include="ReactiveUI" Version="20.1.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="20.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\Furnace\FurnaceIcon.png" />
   </ItemGroup>
 
 </Project>

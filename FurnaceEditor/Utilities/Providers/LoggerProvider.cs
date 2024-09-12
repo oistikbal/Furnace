@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.ObjectModel;
 using FurnaceEditor.Utilities.Loggers;
-using System.Collections.ObjectModel;
+using Microsoft.Extensions.Logging;
 
 namespace FurnaceEditor.Utilities.Providers
 {

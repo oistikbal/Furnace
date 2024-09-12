@@ -3,9 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using FurnaceEditor.Models;
 using FurnaceEditor.Utilities.Serializers;
 using FurnaceEditor.Views.Project;
@@ -31,7 +29,7 @@ namespace FurnaceEditor.ViewModels
             set
             {
                 OnProjectSelected(value);  // Handle the item selection
-                this.RaiseAndSetIfChanged(ref _selectedRecentProject, value);            
+                this.RaiseAndSetIfChanged(ref _selectedRecentProject, value);
             }
         }
 

@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/AakStudio.Shell.UI.Themes.AvalonDock;component/Themes/VisualStudio2022/DarkTheme.xaml" />
                 <ResourceDictionary Source="/AakStudio.Shell.UI;component/Themes/VisualStudio2022/DarkTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Dictionaries/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Windows;
 using FurnaceEditor.Attributes;
 using FurnaceEditor.Services;
-using FurnaceEditor.Utilities;
-using FurnaceEditor.Utilities.Loggers;
 using FurnaceEditor.Utilities.Providers;
 using FurnaceEditor.ViewModels;
-using FurnaceEditor.ViewModels.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
@@ -58,7 +54,7 @@ namespace FurnaceEditor.Views
             });
             services.AddSingleton<EditorWindowViewModel>(provider =>
             {
-                return new EditorWindowViewModel(provider.GetRequiredService<WindowsService>(), 
+                return new EditorWindowViewModel(provider.GetRequiredService<WindowsService>(),
                     provider.GetRequiredService<ProjectService>(), provider.GetRequiredService<ILogger<EditorWindowViewModel>>());
             });
 

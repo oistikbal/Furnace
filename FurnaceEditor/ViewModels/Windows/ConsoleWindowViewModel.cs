@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Reactive;
 using System.Windows.Data;
 using FurnaceEditor.Utilities.Loggers;
 using FurnaceEditor.Utilities.Providers;
-using FurnaceEditor.ViewModels.Components;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
@@ -50,7 +48,7 @@ namespace FurnaceEditor.ViewModels.Windows
             set
             {
                 this.RaiseAndSetIfChanged(ref _filterText, value);
-                FilteredLogs.Refresh();
+                UpdateFilter();
             }
         }
 
@@ -91,7 +89,6 @@ namespace FurnaceEditor.ViewModels.Windows
         }
         #endregion
 
-        // TO-DO: Update Filter and Toggle Buttons
         public ConsoleWindowViewModel(ILogger<ConsoleWindowViewModel> logger, IObservableLoggerProvider loggerProvider)
         {
             _logger = logger;
@@ -99,27 +96,15 @@ namespace FurnaceEditor.ViewModels.Windows
             SelectedLogCommand = ReactiveCommand.Create<LogMessage>(log => { SelectedLog = log; });
             ClearCommand = ReactiveCommand.Create(loggerProvider.Logs.Clear);
 
-            IsInfoChecked = true; 
-            IsWarnChecked = true; 
+            IsInfoChecked = true;
+            IsWarnChecked = true;
             IsErrorChecked = true;
-        }
 
-        private void UpdateFilter()
-        {
-            // Calculate the combined filter value based on selected log types
-            int filter = 0;
-            if (IsInfoChecked) filter |= (int)LogType.Info;
-            if (IsWarnChecked) filter |= (int)LogType.Warn;
-            if (IsErrorChecked) filter |= (int)LogType.Error;
-
-
-            // Apply the filter to the collection view
             FilteredLogs.Filter = log =>
             {
                 var logMessage = (LogMessage)log;
 
-                // Check if the log type matches any of the enabled types
-                bool isMessageTypeMatch = ((int)logMessage.LogType & filter) != 0;
+                bool isMessageTypeMatch = ((int)logMessage.LogType & _messageFilter) != 0;
 
                 // Check if the log message contains the filter text, if any
                 bool isTextMatch = string.IsNullOrEmpty(FilterText) ||
@@ -127,7 +112,17 @@ namespace FurnaceEditor.ViewModels.Windows
 
                 return isMessageTypeMatch && isTextMatch;
             };
-            _logger.LogInformation("updatefilter");
+        }
+
+        private void UpdateFilter()
+        {
+            _messageFilter = 0;
+
+            if (IsInfoChecked) _messageFilter |= (int)LogType.Info;
+            if (IsWarnChecked) _messageFilter |= (int)LogType.Warn;
+            if (IsErrorChecked) _messageFilter |= (int)LogType.Error;
+
+            FilteredLogs.Refresh();
         }
     }
 }

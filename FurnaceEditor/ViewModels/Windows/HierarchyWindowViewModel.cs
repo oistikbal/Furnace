@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using FurnaceEditor.ViewModels.Components;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
-using Splat;
 
 namespace FurnaceEditor.ViewModels.Windows
 {

@@ -1,11 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Reactive;
 using System.Reflection;
+using DynamicData;
 using FurnaceEditor.Attributes;
 using FurnaceEditor.Models;
 using FurnaceEditor.Services;
-using DynamicData;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 

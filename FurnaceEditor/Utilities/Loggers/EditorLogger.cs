@@ -62,12 +62,12 @@ namespace FurnaceEditor.Utilities.Loggers
         public override Encoding Encoding => Encoding.UTF8;
     }
 
-
+    [Flags]
     public enum LogType
     {
-        Info = 0x01,
-        Warn = 0x02,
-        Error = 0x04,
+        Info = 1 << 0,
+        Warn = 1 << 1,
+        Error = 1 << 2,
     }
 
     public class LogMessage
@@ -141,7 +141,7 @@ namespace FurnaceEditor.Utilities.Loggers
                         Details = $"{declaringType}.{method.Name} @ ({fileName}:{lineNumber})"
                     };
                 })
-                .ToList();
+            .ToList();
 
             string callstack = string.Join("\n", frames.Select(f => f.Details));
 
@@ -165,6 +165,8 @@ namespace FurnaceEditor.Utilities.Loggers
                 LogLevel.Information => LogType.Info,
                 LogLevel.Warning => LogType.Warn,
                 LogLevel.Error => LogType.Error,
+                LogLevel.Critical => LogType.Error,
+                LogLevel.Trace => LogType.Error,
                 _ => 0
             };
         }

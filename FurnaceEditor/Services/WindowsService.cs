@@ -9,7 +9,6 @@ using AvalonDock.Layout.Serialization;
 using FurnaceEditor.Attributes;
 using FurnaceEditor.Utilities.Providers;
 using FurnaceEditor.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FurnaceEditor.Services
 {
