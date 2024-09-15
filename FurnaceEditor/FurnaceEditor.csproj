@@ -10,6 +10,8 @@
     <BaseOutputPath>$(SolutionDir)bin\</BaseOutputPath>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <ApplicationIcon>Resources\Icons\FurnaceIcon.ico</ApplicationIcon>
+	<EnableNETAnalyzers>true</EnableNETAnalyzers>
+	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup>
