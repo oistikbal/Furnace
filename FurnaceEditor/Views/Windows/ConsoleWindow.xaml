@@ -205,6 +205,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <ListBox
+                x:Name="listBox"
                 Grid.Row="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
@@ -220,6 +221,9 @@
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectedLogCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SizeChanged">
                         <i:InvokeCommandAction Command="{Binding SelectedLogCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>

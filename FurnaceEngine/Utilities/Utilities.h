@@ -5,7 +5,8 @@
 
 #if USE_STL_VECTOR
 #include <vector>
-namespace dx12engine::utl {
+namespace furnace::utl
+{
 	template<typename T>
 	using vector = std::vector<T>;
 }
@@ -13,7 +14,7 @@ namespace dx12engine::utl {
 
 #if USE_STL_DEQUE
 #include <deque>
-namespace dx12engine::utl {
+namespace furnace::utl {
 	template<typename T>
 	using deque = std::deque<T>;
 }

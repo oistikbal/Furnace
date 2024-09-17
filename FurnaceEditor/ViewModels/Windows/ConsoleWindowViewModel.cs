@@ -5,6 +5,7 @@ using FurnaceEditor.Utilities.Loggers;
 using FurnaceEditor.Utilities.Providers;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
+using Windows.Foundation.Collections;
 
 namespace FurnaceEditor.ViewModels.Windows
 {
@@ -92,6 +93,7 @@ namespace FurnaceEditor.ViewModels.Windows
         public ConsoleWindowViewModel(ILogger<ConsoleWindowViewModel> logger, IObservableLoggerProvider loggerProvider)
         {
             _logger = logger;
+            FilteredLogs = new CollectionViewSource().View;
             FilteredLogs = CollectionViewSource.GetDefaultView(loggerProvider.Logs);
             SelectedLogCommand = ReactiveCommand.Create<LogMessage>(log => { SelectedLog = log; });
             ClearCommand = ReactiveCommand.Create(loggerProvider.Logs.Clear);

@@ -12,6 +12,7 @@
     <ApplicationIcon>Resources\Icons\FurnaceIcon.ico</ApplicationIcon>
 	<EnableNETAnalyzers>true</EnableNETAnalyzers>
 	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,6 +46,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging.EventSource" Version="8.0.0" />
     <PackageReference Include="ReactiveUI" Version="20.1.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="20.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Controls\VectorBox.xaml.cs">
+      <Generator>MSBuild:Compile</Generator>
+    </Compile>
   </ItemGroup>
 
 </Project>

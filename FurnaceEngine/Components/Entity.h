@@ -1,23 +1,31 @@
 #pragma once
 
-#include "ComponentsCommon.h"
+#include "..\..\ThirdParty\entt\single_include\entt\entt.hpp"
+#include "..\Common\common.h"
 
-namespace dx12engine 
+namespace furnace
 {
-#define INIT_INFO(COMPONENT) namespace COMPONENT {struct init_info;}
-	
-INIT_INFO(transform)
+    class entity {
+    public:
+        entity() = delete;
+        entity static create();
+        ~entity();
+        void destroy();
+        template <typename Type, typename... Args>
+        inline decltype(auto) add_component(Args&&... args);
 
-#undef INIT_INFO
-	namespace game_entity 
-	{
-		struct entity_info 
-		{
-			transform::init_info* transform{ nullptr };
-		};
 
-		entity create_game_entity(const entity_info& info);
-		void remove_game_entity(entity id);
-		bool is_alive(entity id);
-	}
-}
+    private:
+        explicit entity(entt::entity id);
+    private:
+        entt::entity m_id;
+        static inline entt::registry s_registry;
+
+    };
+
+    template <typename Type, typename... Args>
+    inline decltype(auto) entity::add_component(Args&&... args)
+    {
+        return s_registry.emplace<Type>(m_id, std::forward<Args>(args)...);
+    }
+};
