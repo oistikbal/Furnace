@@ -4,6 +4,6 @@
 #include <assert.h>
 #include <typeinfo>
 
+#include "..\Utilities\common.h"
+#include "..\Components\common.h"
 #include "types.h"
-#include "..\Utilities\utilities.h"
-#include "..\Components\entity.h"

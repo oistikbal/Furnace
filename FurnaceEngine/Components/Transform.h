@@ -1,12 +1,14 @@
 #pragma once
-#include "..\Common\common.h"
+#include "common.h"
+#include "..\Utilities\common.h"
 
-namespace furnace::component 
+namespace furnace::component
 {
-	struct transform
+	struct transform : component
 	{
-		f32 position[3];
-		f32 rotation[3];
-		f32 scale[3];
+		math::vec4 rotation;
+		math::vec3 orientation;
+		math::vec3 position;
+		math::vec3 scale;
 	};
 }

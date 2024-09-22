@@ -13,6 +13,9 @@
 	<EnableNETAnalyzers>true</EnableNETAnalyzers>
 	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	<Platforms>x64</Platforms>
+	<NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,6 +42,7 @@
   <ItemGroup>
     <PackageReference Include="AakStudio.Shell.UI" Version="0.1.6-beta-0328" />
     <PackageReference Include="AakStudio.Shell.UI.Themes.AvalonDock" Version="4.72.0" />
+    <PackageReference Include="CppSharp.Runtime" Version="1.1.5.3168" />
     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
@@ -49,9 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Controls\VectorBox.xaml.cs">
-      <Generator>MSBuild:Compile</Generator>
-    </Compile>
+    <Folder Include="Api\" />
   </ItemGroup>
 
 </Project>

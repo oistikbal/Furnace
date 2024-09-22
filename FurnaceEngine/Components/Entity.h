@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\..\ThirdParty\entt\single_include\entt\entt.hpp"
+#include "..\..\ThirdParty\entt\src\entt\entt.hpp"
 #include "..\Common\common.h"
 
 namespace furnace
@@ -8,19 +8,22 @@ namespace furnace
     class entity {
     public:
         entity() = delete;
-        entity static create();
-        ~entity();
+        explicit entity(entt::entity e);
+        explicit entity(ENTT_ID_TYPE e);
+        ~entity() {};
         void destroy();
+        bool is_alive() const;
+        ENTT_ID_TYPE id() const;
+        bool operator==(entity e) const;
+
         template <typename Type, typename... Args>
         inline decltype(auto) add_component(Args&&... args);
 
-
     private:
-        explicit entity(entt::entity id);
-    private:
-        entt::entity m_id;
-        static inline entt::registry s_registry;
-
+        inline static entt::registry s_registry;
+        ENTT_ID_TYPE m_id;
+    public:
+        static entity create();
     };
 
     template <typename Type, typename... Args>
