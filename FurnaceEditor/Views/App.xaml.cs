@@ -36,6 +36,7 @@ namespace FurnaceEditor.Views
             editorWindow.DataContext = _serviceProvider.GetRequiredService<EditorWindowViewModel>();
             editorWindow.Show();
             MainWindow = editorWindow;
+            _serviceProvider.GetRequiredService<EngineService>();
             _projectDialog?.Close();
         }
 
@@ -45,6 +46,7 @@ namespace FurnaceEditor.Views
 
             var loggerProvider = new LoggerProvider();
             services.AddSingleton<EditorWindow>();
+            services.AddSingleton<EngineService>();
             services.AddSingleton<IObservableLoggerProvider>(loggerProvider);
 
             services.AddLogging(configure =>

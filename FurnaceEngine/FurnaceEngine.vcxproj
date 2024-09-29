@@ -19,13 +19,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -55,7 +55,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>FURNACE_EDITOR;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <CallingConvention>FastCall</CallingConvention>
@@ -63,20 +63,23 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Workspace\Cpp\Furnace\ThirdParty;$(SolutionDir)ThirdParty\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableModules>false</EnableModules>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)FurnaceAPIGenerator\bin\$(Platform)\$(Configuration)\FurnaceAPIGenerator.exe -apiPath $(ProjectDir)Api -outputPath $(SolutionDir)FurnaceEditor\Api -binPath $(SolutionDir)bin\$(Configuration)</Command>
-      <Message>Build Engine API</Message>
-    </PostBuildEvent>
-    <PreBuildEvent>
       <Command>
       </Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)Tools\flatc.exe --cpp -o $(ProjectDir)Editor -I $(SolutionDir)Buffers\ $(SolutionDir)Buffers\buffers.fbs
+$(SolutionDir)Tools\flatc.exe --csharp --gen-onefile -o $(SolutionDir)FurnaceEditor\Utilities -I $(SolutionDir)Buffers\ $(SolutionDir)Buffers\buffers.fbs</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -85,41 +88,51 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>FURNACE_EDITOR;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Workspace\Cpp\Furnace\ThirdParty;$(SolutionDir)ThirdParty\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableModules>false</EnableModules>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>$(SolutionDir)FurnaceAPIGenerator\bin\$(Platform)\$(Configuration)\FurnaceAPIGenerator.exe -apiPath $(ProjectDir)Api -outputPath $(SolutionDir)FurnaceEditor\Api -binPath $(SolutionDir)bin\$(Configuration)</Command>
-      <Message>Build Engine API</Message>
-    </PostBuildEvent>
-    <PreBuildEvent>
       <Command>
       </Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)Tools\flatc.exe --cpp -o $(ProjectDir)Editor -I $(SolutionDir)Buffers\ $(SolutionDir)Buffers\buffers.fbs
+$(SolutionDir)Tools\flatc.exe --csharp --gen-onefile -o $(SolutionDir)FurnaceEditor\Utilities -I $(SolutionDir)Buffers\ $(SolutionDir)Buffers\buffers.fbs</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Api\entity_api.cpp" />
+    <ClCompile Include="Common\debug.cpp" />
     <ClCompile Include="Components\entity.cpp" />
+    <ClCompile Include="Editor\mmf.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api\api.h" />
     <ClInclude Include="Common\common.h" />
+    <ClInclude Include="Common\debug.h" />
     <ClInclude Include="Common\types.h" />
     <ClInclude Include="Components\common.h" />
     <ClInclude Include="Components\component.h" />
     <ClInclude Include="Components\entity.h" />
     <ClInclude Include="Api\entity_api.h" />
     <ClInclude Include="Components\transform.h" />
+    <ClInclude Include="Editor\buffers_generated.h" />
+    <ClInclude Include="Editor\mmf.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Utilities\action.h" />
     <ClInclude Include="Utilities\common.h" />
     <ClInclude Include="Utilities\math.h" />
     <ClInclude Include="Utilities\math_types.h" />
@@ -127,6 +140,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FurnaceEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="FurnaceEngine.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

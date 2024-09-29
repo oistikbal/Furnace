@@ -42,18 +42,14 @@
   <ItemGroup>
     <PackageReference Include="AakStudio.Shell.UI" Version="0.1.6-beta-0328" />
     <PackageReference Include="AakStudio.Shell.UI.Themes.AvalonDock" Version="4.72.0" />
-    <PackageReference Include="CppSharp.Runtime" Version="1.1.5.3168" />
     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
+    <PackageReference Include="Google.FlatBuffers" Version="24.3.25" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.EventSource" Version="8.0.0" />
     <PackageReference Include="ReactiveUI" Version="20.1.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="20.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Api\" />
   </ItemGroup>
 
 </Project>

@@ -44,9 +44,10 @@
             HorizontalAlignment="Center"
             HorizontalContentAlignment="Center"
             Content="Add Component" />
-        <utl:IntegerBox Label="IntegerBox" Value="0" />
         <Separator Height="3" Visibility="Hidden" />
-        <utl:FloatBox Label="FloatBox" Value="0" />
+        <utl:IntegerBox Label="IntegerBox" />
+        <Separator Height="3" Visibility="Hidden" />
+        <utl:FloatBox Label="FloatBox" />
         <Separator Height="3" Visibility="Hidden" />
         <utl:VectorBox Label="VectorBox" />
     </StackPanel>

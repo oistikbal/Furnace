@@ -1,0 +1,18 @@
+namespace Furnace.Buffers;
+
+enum LogType:byte { Info, Warn, Error}
+
+table Log {
+    log_type:LogType;
+    text: string;
+}
+
+union AnyMessage {
+    Log,
+}
+
+table MessageWrapper {
+    message: AnyMessage;
+}
+
+root_type MessageWrapper;

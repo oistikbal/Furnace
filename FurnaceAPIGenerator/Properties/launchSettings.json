@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "FurnaceAPIGenerator": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}

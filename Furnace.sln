@@ -4,35 +4,36 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FurnaceEngine", "FurnaceEngine\FurnaceEngine.vcxproj", "{98E638F6-25C6-4824-8BAF-57A56D14832B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B22CB37D-3AE9-40F7-A4FD-816E82534A58} = {B22CB37D-3AE9-40F7-A4FD-816E82534A58}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FurnaceEditor", "FurnaceEditor\FurnaceEditor.csproj", "{1863EB8B-56C6-499E-9A53-6CA39998F245}"
 	ProjectSection(ProjectDependencies) = postProject
 		{98E638F6-25C6-4824-8BAF-57A56D14832B} = {98E638F6-25C6-4824-8BAF-57A56D14832B}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FurnaceAPIGenerator", "FurnaceAPIGenerator\FurnaceAPIGenerator.csproj", "{B22CB37D-3AE9-40F7-A4FD-816E82534A58}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{98E638F6-25C6-4824-8BAF-57A56D14832B}.Debug|x64.ActiveCfg = Debug|x64
 		{98E638F6-25C6-4824-8BAF-57A56D14832B}.Debug|x64.Build.0 = Debug|x64
+		{98E638F6-25C6-4824-8BAF-57A56D14832B}.Debug|x86.ActiveCfg = Debug|x64
+		{98E638F6-25C6-4824-8BAF-57A56D14832B}.Debug|x86.Build.0 = Debug|x64
 		{98E638F6-25C6-4824-8BAF-57A56D14832B}.Release|x64.ActiveCfg = Release|x64
 		{98E638F6-25C6-4824-8BAF-57A56D14832B}.Release|x64.Build.0 = Release|x64
+		{98E638F6-25C6-4824-8BAF-57A56D14832B}.Release|x86.ActiveCfg = Release|x64
+		{98E638F6-25C6-4824-8BAF-57A56D14832B}.Release|x86.Build.0 = Release|x64
 		{1863EB8B-56C6-499E-9A53-6CA39998F245}.Debug|x64.ActiveCfg = Debug|x64
 		{1863EB8B-56C6-499E-9A53-6CA39998F245}.Debug|x64.Build.0 = Debug|x64
+		{1863EB8B-56C6-499E-9A53-6CA39998F245}.Debug|x86.ActiveCfg = Debug|x64
+		{1863EB8B-56C6-499E-9A53-6CA39998F245}.Debug|x86.Build.0 = Debug|x64
 		{1863EB8B-56C6-499E-9A53-6CA39998F245}.Release|x64.ActiveCfg = Release|x64
 		{1863EB8B-56C6-499E-9A53-6CA39998F245}.Release|x64.Build.0 = Release|x64
-		{B22CB37D-3AE9-40F7-A4FD-816E82534A58}.Debug|x64.ActiveCfg = Debug|x64
-		{B22CB37D-3AE9-40F7-A4FD-816E82534A58}.Debug|x64.Build.0 = Debug|x64
-		{B22CB37D-3AE9-40F7-A4FD-816E82534A58}.Release|x64.ActiveCfg = Release|x64
-		{B22CB37D-3AE9-40F7-A4FD-816E82534A58}.Release|x64.Build.0 = Release|x64
+		{1863EB8B-56C6-499E-9A53-6CA39998F245}.Release|x86.ActiveCfg = Release|x64
+		{1863EB8B-56C6-499E-9A53-6CA39998F245}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
