@@ -23,15 +23,17 @@ struct MessageWrapper;
 struct MessageWrapperBuilder;
 
 enum LogType : int8_t {
-  LogType_Info = 0,
-  LogType_Warn = 1,
-  LogType_Error = 2,
-  LogType_MIN = LogType_Info,
+  LogType_None = 0,
+  LogType_Info = 1,
+  LogType_Warn = 2,
+  LogType_Error = 4,
+  LogType_MIN = LogType_None,
   LogType_MAX = LogType_Error
 };
 
-inline const LogType (&EnumValuesLogType())[3] {
+inline const LogType (&EnumValuesLogType())[4] {
   static const LogType values[] = {
+    LogType_None,
     LogType_Info,
     LogType_Warn,
     LogType_Error
@@ -40,9 +42,11 @@ inline const LogType (&EnumValuesLogType())[3] {
 }
 
 inline const char * const *EnumNamesLogType() {
-  static const char * const names[4] = {
+  static const char * const names[6] = {
+    "None",
     "Info",
     "Warn",
+    "",
     "Error",
     nullptr
   };
@@ -50,7 +54,7 @@ inline const char * const *EnumNamesLogType() {
 }
 
 inline const char *EnumNameLogType(LogType e) {
-  if (::flatbuffers::IsOutRange(e, LogType_Info, LogType_Error)) return "";
+  if (::flatbuffers::IsOutRange(e, LogType_None, LogType_Error)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesLogType()[index];
 }
@@ -140,7 +144,7 @@ struct LogBuilder {
 
 inline ::flatbuffers::Offset<Log> CreateLog(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    Furnace::Buffers::LogType log_type = Furnace::Buffers::LogType_Info,
+    Furnace::Buffers::LogType log_type = Furnace::Buffers::LogType_None,
     ::flatbuffers::Offset<::flatbuffers::String> text = 0) {
   LogBuilder builder_(_fbb);
   builder_.add_text(text);
@@ -150,7 +154,7 @@ inline ::flatbuffers::Offset<Log> CreateLog(
 
 inline ::flatbuffers::Offset<Log> CreateLogDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    Furnace::Buffers::LogType log_type = Furnace::Buffers::LogType_Info,
+    Furnace::Buffers::LogType log_type = Furnace::Buffers::LogType_None,
     const char *text = nullptr) {
   auto text__ = text ? _fbb.CreateString(text) : 0;
   return Furnace::Buffers::CreateLog(

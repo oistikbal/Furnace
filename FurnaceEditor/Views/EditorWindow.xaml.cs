@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using AakStudio.Shell.UI.Controls;
+﻿using AakStudio.Shell.UI.Controls;
 
 namespace FurnaceEditor.Views
 {
@@ -8,7 +7,6 @@ namespace FurnaceEditor.Views
         public EditorWindow()
         {
             InitializeComponent();
-            Closed += (object? sender, EventArgs e) => { Application.Current.Shutdown(); };
         }
     }
 }

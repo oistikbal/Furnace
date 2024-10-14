@@ -1,6 +1,11 @@
 namespace Furnace.Buffers;
 
-enum LogType:byte { Info, Warn, Error}
+enum LogType : byte {
+    None = 0,
+    Info = 1,       // 0b0001 (1 << 0)
+    Warn = 2,       // 0b0010 (1 << 1)
+    Error = 4,      // 0b0100 (1 << 2)
+}
 
 table Log {
     log_type:LogType;

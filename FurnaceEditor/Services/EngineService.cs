@@ -17,6 +17,7 @@ namespace FurnaceEditor.Services
         private Process? _engineProcess;
         private readonly ILogger _logger;
         private MemoryMappedFile _mmf;
+        private readonly CancellationTokenSource _cancellationToken;
 
         public event Action<Furnace.Buffers.MessageWrapper> OnMessageReceived;
         public EngineService(ILogger<EngineService> logger)
@@ -26,13 +27,13 @@ namespace FurnaceEditor.Services
             try
             {
                 _mmf = MemoryMappedFile.CreateOrOpen(MmfName, FileSize);
+                _cancellationToken = new CancellationTokenSource();
                 Thread writerThread = new Thread(Write);
                 Thread readerThread = new Thread(Read);
+                writerThread.IsBackground = true;
+                readerThread.IsBackground = true;
                 writerThread.Start();
                 readerThread.Start();
-
-
-                _isRunning = true;
             }
             catch (Exception e)
             {
@@ -53,24 +54,33 @@ namespace FurnaceEditor.Services
 
                 _engineProcess = Process.Start(info);
             }
+#endif
             _logger.LogInformation("EngineService initialized.");
         }
 
         private void EngineService_OnMessageReceived(Furnace.Buffers.MessageWrapper obj)
         {
-            if(obj.MessageType == Furnace.Buffers.AnyMessage.Log)
+            if (obj.MessageType == Furnace.Buffers.AnyMessage.Log)
             {
                 var log = obj.MessageAsLog();
-                if (log.LogType == Furnace.Buffers.LogType.Info)
+                switch (log.LogType)
                 {
-                    _logger.LogInformation(log.Text);
+                    case Furnace.Buffers.LogType.Info:
+                        _logger.LogInformation(log.Text);
+                        break;
+                    case Furnace.Buffers.LogType.Warn:
+                        _logger.LogWarning(log.Text);
+                        break;
+                    case Furnace.Buffers.LogType.Error:
+                        _logger.LogError(log.Text);
+                        break;
                 }
             }
         }
-#endif
 
         ~EngineService()
         {
+            _cancellationToken.Cancel();
             _mmf.Dispose();
             _engineProcess?.Kill();
         }
@@ -87,7 +97,7 @@ namespace FurnaceEditor.Services
                 byte senderId = 2; // C# sender ID
                 byte packageId = 0;
 
-                while (_isRunning)
+                while (!_cancellationToken.IsCancellationRequested)
                 {
                     if (_messageQueue.TryDequeue(out FlatBufferBuilder builder))
                     {
@@ -97,7 +107,7 @@ namespace FurnaceEditor.Services
                         accessor.WriteArray(HeaderSize, buffer, 0, buffer.Length);
                         packageId++;
 
-                        Thread.Sleep(100);
+                        Thread.Sleep(10);
                     }
                 }
             }
@@ -109,7 +119,7 @@ namespace FurnaceEditor.Services
             {
                 byte lastPackageId = 255;
 
-                while (_isRunning)
+                while (!_cancellationToken.IsCancellationRequested)
                 {
                     byte senderId = accessor.ReadByte(0);
                     byte packageId = accessor.ReadByte(1);

@@ -63,7 +63,7 @@ namespace FurnaceEditor.Utilities.Loggers
     }
 
     [Flags]
-    public enum LogType
+    public enum LogType : byte
     {
         Info = 1 << 0,
         Warn = 1 << 1,
@@ -149,7 +149,7 @@ namespace FurnaceEditor.Utilities.Loggers
             var lastFrame = frames.First();
 
             // Update log collection on the UI thread
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
             {
                 if (IsEnabled(logLevel))
                 {
@@ -212,7 +212,7 @@ namespace FurnaceEditor.Utilities.Loggers
             var lastFrame = frames.First();
 
 
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
             {
                 _logs.Add(new LogMessage(LogType.Info, message, callstack, lastFrame.Details));
             }));

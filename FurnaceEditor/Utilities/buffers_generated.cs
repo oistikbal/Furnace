@@ -11,9 +11,10 @@ using global::Google.FlatBuffers;
 
 public enum LogType : sbyte
 {
-  Info = 0,
-  Warn = 1,
-  Error = 2,
+  None = 0,
+  Info = 1,
+  Warn = 2,
+  Error = 4,
 };
 
 public enum AnyMessage : byte
@@ -51,7 +52,7 @@ public struct Log : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public Log __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public Furnace.Buffers.LogType LogType { get { int o = __p.__offset(4); return o != 0 ? (Furnace.Buffers.LogType)__p.bb.GetSbyte(o + __p.bb_pos) : Furnace.Buffers.LogType.Info; } }
+  public Furnace.Buffers.LogType LogType { get { int o = __p.__offset(4); return o != 0 ? (Furnace.Buffers.LogType)__p.bb.GetSbyte(o + __p.bb_pos) : Furnace.Buffers.LogType.None; } }
   public string Text { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTextBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -61,7 +62,7 @@ public struct Log : IFlatbufferObject
   public byte[] GetTextArray() { return __p.__vector_as_array<byte>(6); }
 
   public static Offset<Furnace.Buffers.Log> CreateLog(FlatBufferBuilder builder,
-      Furnace.Buffers.LogType log_type = Furnace.Buffers.LogType.Info,
+      Furnace.Buffers.LogType log_type = Furnace.Buffers.LogType.None,
       StringOffset textOffset = default(StringOffset)) {
     builder.StartTable(2);
     Log.AddText(builder, textOffset);

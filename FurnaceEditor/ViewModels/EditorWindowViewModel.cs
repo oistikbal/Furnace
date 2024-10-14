@@ -1,10 +1,13 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Reactive;
 using System.Reflection;
 using DynamicData;
 using FurnaceEditor.Attributes;
 using FurnaceEditor.Models;
 using FurnaceEditor.Services;
+using FurnaceEditor.Utilities.Loggers;
+using FurnaceEditor.Utilities.Providers;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
@@ -24,7 +27,7 @@ namespace FurnaceEditor.ViewModels
             public string Path { get; set; }
         }
 
-
+        private LogMessage _lastLog;
         private WindowsService _windowsService;
         private readonly string _layoutsPrefix;
         private string _sceneName = "";
@@ -32,6 +35,11 @@ namespace FurnaceEditor.ViewModels
 
         public ObservableCollection<WindowItem> WindowItems { get; private set; }
         public ObservableCollection<LayoutResource> Layouts { get; private set; }
+        public LogMessage LastLog
+        {
+            get => _lastLog;
+            set => this.RaiseAndSetIfChanged(ref _lastLog, value);
+        }
 
         #region Commands
         public ReactiveCommand<WindowItem, Unit> OpenWindowCommand { get; private set; }
@@ -46,7 +54,7 @@ namespace FurnaceEditor.ViewModels
         public string ProjectName { get => _projectName; set => this.RaiseAndSetIfChanged(ref _projectName, value); }
         #endregion
 
-        public EditorWindowViewModel(WindowsService windowsService, ProjectService projectService, ILogger<EditorWindowViewModel> logger)
+        public EditorWindowViewModel(WindowsService windowsService, ProjectService projectService, ILogger<EditorWindowViewModel> logger, IObservableLoggerProvider loggerProvider)
         {
             _layoutsPrefix = $"{Assembly.GetExecutingAssembly().GetName().Name}.Resources.Layouts.";
             WindowItems = new();
@@ -63,12 +71,26 @@ namespace FurnaceEditor.ViewModels
             LoadWindowItems();
             LoadAllLayoutResourceNames(_layoutsPrefix);
 
-
             MessageBus.Current.Listen<Project>().Subscribe(project =>
             {
                 ProjectName = project.Name;
             });
+
             ProjectName = projectService.GetProject().Name;
+
+            loggerProvider.Logs.CollectionChanged += (object? sender, NotifyCollectionChangedEventArgs e) =>
+            {
+                var collection = sender as ObservableCollection<LogMessage>;
+
+                if (collection != null && collection.Count > 0)
+                {
+                    LastLog = collection[collection.Count - 1];
+                }
+                else
+                {
+                    LastLog = null;
+                }
+            };
         }
 
         private void LoadAllLayoutResourceNames(string folderName)

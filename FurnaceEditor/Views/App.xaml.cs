@@ -56,8 +56,11 @@ namespace FurnaceEditor.Views
             });
             services.AddSingleton<EditorWindowViewModel>(provider =>
             {
-                return new EditorWindowViewModel(provider.GetRequiredService<WindowsService>(),
-                    provider.GetRequiredService<ProjectService>(), provider.GetRequiredService<ILogger<EditorWindowViewModel>>());
+                return new EditorWindowViewModel(
+                    provider.GetRequiredService<WindowsService>(),
+                    provider.GetRequiredService<ProjectService>(),
+                    provider.GetRequiredService<ILogger<EditorWindowViewModel>>(),
+                    provider.GetRequiredService<IObservableLoggerProvider>());
             });
 
             services.AddSingleton<WindowsService>(provider =>
